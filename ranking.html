@@ -122,7 +122,7 @@ footer .copy { font-size: 13px; color: #556; }
 
 <div class="page-header">
   <h1 id="pageTitle">글로벌 스타트업 랭킹 TOP 50</h1>
-  <p id="pageSubtitle">SR Score 기반 전 세계 스타트업 순위 - startupranking.com 데이터 기반</p>
+  <p id="pageSubtitle">SF Score 기반 전 세계 스타트업 순위 - startupranking.com 데이터 기반</p>
 </div>
 
 <div class="stats-bar">
@@ -178,7 +178,7 @@ footer .copy { font-size: 13px; color: #556; }
   <div class="table-wrap">
     <table class="rank-table" id="rankTable">
       <thead>
-        <tr><th>순위</th><th>스타트업</th><th>SR Score</th><th>국가</th><th>국가 순위</th><th>변동</th></tr>
+        <tr><th>순위</th><th>스타트업</th><th>SF Score</th><th>국가</th><th>국가 순위</th><th>변동</th></tr>
       </thead>
       <tbody id="rankBody">
       </tbody>
@@ -310,9 +310,9 @@ function renderTable(data) {
   // Update table header
   const thead = document.querySelector('.rank-table thead tr');
   if (isKorea) {
-    thead.innerHTML = '<th>순위</th><th>스타트업</th><th>SR Score</th><th>글로벌 순위</th><th>변동</th>';
+    thead.innerHTML = '<th>순위</th><th>스타트업</th><th>SF Score</th><th>글로벌 순위</th><th>변동</th>';
   } else {
-    thead.innerHTML = '<th>순위</th><th>스타트업</th><th>SR Score</th><th>국가</th><th>국가 순위</th><th>변동</th>';
+    thead.innerHTML = '<th>순위</th><th>스타트업</th><th>SF Score</th><th>국가</th><th>국가 순위</th><th>변동</th>';
   }
 }
 
@@ -328,11 +328,11 @@ function switchTab(tab) {
   if (tab === 'korea') {
     countryFilter.style.display = 'none';
     document.getElementById('pageTitle').textContent = '한국 스타트업 랭킹 TOP 20';
-    document.getElementById('pageSubtitle').textContent = 'SR Score 기반 대한민국 스타트업 순위 - startupranking.com 데이터 기반';
+    document.getElementById('pageSubtitle').textContent = 'SF Score 기반 대한민국 스타트업 순위 - startupranking.com 데이터 기반';
   } else {
     countryFilter.style.display = '';
     document.getElementById('pageTitle').textContent = '글로벌 스타트업 랭킹 TOP 50';
-    document.getElementById('pageSubtitle').textContent = 'SR Score 기반 전 세계 스타트업 순위 - startupranking.com 데이터 기반';
+    document.getElementById('pageSubtitle').textContent = 'SF Score 기반 전 세계 스타트업 순위 - startupranking.com 데이터 기반';
   }
 
   // Reset filters

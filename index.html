@@ -242,11 +242,11 @@ footer .copy { font-size: 13px; color: #556; }
     <button class="tab" id="tabKorea" onclick="switchMainTab('korea')">🇰🇷 한국 TOP 10</button>
   </div>
   <h2 id="mainRankTitle">글로벌 스타트업 랭킹 TOP 10</h2>
-  <p class="subtitle" id="mainRankSubtitle">SR Score 기반 전 세계 스타트업 순위</p>
+  <p class="subtitle" id="mainRankSubtitle">SF Score 기반 전 세계 스타트업 순위</p>
   <div class="table-wrap">
     <table class="rank-table">
       <thead id="mainRankHead">
-        <tr><th>순위</th><th>스타트업</th><th>SR Score</th><th>국가</th><th>국가 순위</th></tr>
+        <tr><th>순위</th><th>스타트업</th><th>SF Score</th><th>국가</th><th>국가 순위</th></tr>
       </thead>
       <tbody id="mainRankBody">
         <tr>
@@ -755,8 +755,8 @@ function switchMainTab(tab) {
   if (tab === 'korea') {
     if (!globalTableHTML) globalTableHTML = tbody.innerHTML;
     title.textContent = '한국 스타트업 랭킹 TOP 10';
-    subtitle.textContent = 'SR Score 기반 대한민국 스타트업 순위';
-    thead.innerHTML = '<tr><th>순위</th><th>스타트업</th><th>SR Score</th><th>글로벌 순위</th><th>변동</th></tr>';
+    subtitle.textContent = 'SF Score 기반 대한민국 스타트업 순위';
+    thead.innerHTML = '<tr><th>순위</th><th>스타트업</th><th>SF Score</th><th>글로벌 순위</th><th>변동</th></tr>';
     viewAll.innerHTML = '<a href="ranking.html#korea" class="btn btn-outline">한국 전체 랭킹 보기 (TOP 20)</a>';
     tbody.innerHTML = krTop10.map(function(s) {
       var rc = s.rank <= 3 ? ' rank-' + s.rank : '';
@@ -774,8 +774,8 @@ function switchMainTab(tab) {
     }).join('');
   } else {
     title.textContent = '글로벌 스타트업 랭킹 TOP 10';
-    subtitle.textContent = 'SR Score 기반 전 세계 스타트업 순위';
-    thead.innerHTML = '<tr><th>순위</th><th>스타트업</th><th>SR Score</th><th>국가</th><th>국가 순위</th></tr>';
+    subtitle.textContent = 'SF Score 기반 전 세계 스타트업 순위';
+    thead.innerHTML = '<tr><th>순위</th><th>스타트업</th><th>SF Score</th><th>국가</th><th>국가 순위</th></tr>';
     viewAll.innerHTML = '<a href="ranking.html" class="btn btn-outline">전체 랭킹 보기 (TOP 50)</a>';
     if (globalTableHTML) tbody.innerHTML = globalTableHTML;
   }
