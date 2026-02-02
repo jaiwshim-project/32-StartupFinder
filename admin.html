@@ -159,7 +159,8 @@ tr:hover { background: #f8fbff; }
     <a href="#" onclick="showPanel('blog-admin',this)">📝 블로그 관리</a>
     <a href="#" onclick="showPanel('ads',this)">📢 광고 관리</a>
     <div class="sep"></div>
-    <a href="#" onclick="showPanel('sync',this)" style="color:#4caf50;">🔄 데이터 동기화</a>
+    <a href="#" onclick="showPanel('sync',this)" style="color:#4caf50;">🔄 데이터 동기화(스타트업랭킹)</a>
+    <a href="#" onclick="showPanel('sync-kr',this)" style="color:#ff9800;">🇰🇷 한국 데이터 동기화</a>
     <a href="#" onclick="showPanel('analytics',this)">📈 분석</a>
     <a href="#" onclick="showPanel('settings',this)">⚙️ 설정</a>
   </div>
@@ -543,6 +544,116 @@ tr:hover { background: #f8fbff; }
       </div>
     </div>
 
+    <!-- Korea Sync Panel -->
+    <div class="panel" id="panel-sync-kr">
+      <h2 style="font-size:22px; margin-bottom:24px;">🇰🇷 한국 스타트업 데이터 동기화</h2>
+
+      <!-- KR Sync Status -->
+      <div class="stat-cards" style="grid-template-columns: repeat(4,1fr); margin-bottom:24px;">
+        <div class="stat-card"><div class="label">마지막 동기화</div><div class="value" style="font-size:16px;" id="krLastSyncTime">-</div></div>
+        <div class="stat-card"><div class="label">동기화 상태</div><div class="value" style="font-size:16px;" id="krSyncStatusText">대기 중</div></div>
+        <div class="stat-card"><div class="label">가져온 스타트업</div><div class="value" id="krSyncedCount">0</div></div>
+        <div class="stat-card"><div class="label">업데이트된 항목</div><div class="value" id="krUpdatedCount">0</div></div>
+      </div>
+
+      <!-- KR Sync Controls -->
+      <div style="background:#fff; border-radius:12px; padding:28px; box-shadow:0 2px 8px rgba(0,0,0,.06); margin-bottom:24px;">
+        <h3 style="font-size:16px; margin-bottom:16px;">한국 동기화 설정</h3>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:20px;">
+          <div class="form-group" style="margin-bottom:0;">
+            <label>데이터 소스</label>
+            <select id="krSyncSource">
+              <option value="kr-top">한국 TOP 랭킹</option>
+              <option value="kr-new">한국 신규 스타트업</option>
+              <option value="kr-all">한국 전체 데이터</option>
+            </select>
+          </div>
+          <div class="form-group" style="margin-bottom:0;">
+            <label>카테고리 필터</label>
+            <select id="krSyncCategory">
+              <option value="all">전체</option>
+              <option value="fintech">핀테크</option>
+              <option value="ai">AI / 머신러닝</option>
+              <option value="ecommerce">이커머스</option>
+              <option value="saas">SaaS</option>
+              <option value="healthcare">헬스케어</option>
+            </select>
+          </div>
+          <div class="form-group" style="margin-bottom:0;">
+            <label>가져올 수</label>
+            <select id="krSyncLimit">
+              <option value="10">10개</option>
+              <option value="20" selected>20개</option>
+              <option value="50">50개</option>
+            </select>
+          </div>
+          <div class="form-group" style="margin-bottom:0;">
+            <label>자동 동기화</label>
+            <select id="krAutoSync">
+              <option value="off">비활성화</option>
+              <option value="6h">6시간마다</option>
+              <option value="12h">12시간마다</option>
+              <option value="24h">매일</option>
+            </select>
+          </div>
+        </div>
+        <div style="display:flex; gap:12px; align-items:center;">
+          <button class="save-btn" style="background:#ff9800;" onclick="startKrSync()">🇰🇷 한국 동기화 시작</button>
+          <button class="save-btn" style="background:#4caf50;" onclick="previewKrSync()">👁️ 미리보기</button>
+          <button class="save-btn" style="background:#e53935;" onclick="stopKrSync()">⏹ 중지</button>
+          <span id="krSyncSpinner" style="display:none; font-size:14px; color:#ff9800;">⏳ 동기화 중...</span>
+        </div>
+      </div>
+
+      <!-- KR Progress -->
+      <div id="krSyncProgress" style="display:none; background:#fff; border-radius:12px; padding:28px; box-shadow:0 2px 8px rgba(0,0,0,.06); margin-bottom:24px;">
+        <h3 style="font-size:16px; margin-bottom:12px;">동기화 진행 상황</h3>
+        <div style="height:12px; background:#e0e0e0; border-radius:6px; overflow:hidden; margin-bottom:8px;">
+          <div id="krSyncBar" style="height:100%; width:0%; background:linear-gradient(90deg,#ff9800,#ffb74d); border-radius:6px; transition:width .3s;"></div>
+        </div>
+        <div style="display:flex; justify-content:space-between; font-size:13px; color:#777;">
+          <span id="krSyncProgressText">준비 중...</span>
+          <span id="krSyncPercent">0%</span>
+        </div>
+        <div id="krSyncLog" style="margin-top:16px; background:#1a2332; border-radius:8px; padding:16px; max-height:200px; overflow-y:auto; font-family:'Consolas','Courier New',monospace; font-size:12px; color:#8899aa;">
+          <div style="color:#ff9800;">[시스템] 한국 데이터 동기화 대기 중...</div>
+        </div>
+      </div>
+
+      <!-- KR Fetched Data Preview -->
+      <div class="admin-table-wrap" id="krSyncResultTable" style="display:none;">
+        <div class="table-header">
+          <h3>가져온 한국 데이터 <span id="krFetchedCountBadge" style="background:#fff3e0; color:#e65100; padding:2px 10px; border-radius:20px; font-size:12px; margin-left:8px;">0건</span></h3>
+          <div class="table-actions">
+            <button onclick="applyAllKr()" style="background:#ff9800; color:#fff; border-color:#ff9800;">✅ 전체 반영</button>
+            <button onclick="exportKrData()">📥 내보내기</button>
+          </div>
+        </div>
+        <table>
+          <thead>
+            <tr><th>순위</th><th>스타트업</th><th>SR Score</th><th>글로벌 순위</th><th>변동</th><th>상태</th><th>작업</th></tr>
+          </thead>
+          <tbody id="krSyncTableBody">
+          </tbody>
+        </table>
+      </div>
+
+      <!-- KR Sync History -->
+      <div class="admin-table-wrap" style="margin-top:24px;">
+        <div class="table-header"><h3>한국 동기화 이력</h3></div>
+        <table>
+          <thead><tr><th>일시</th><th>소스</th><th>가져온 수</th><th>업데이트</th><th>신규</th><th>소요 시간</th><th>상태</th></tr></thead>
+          <tbody>
+            <tr><td>2026-02-02 15:00</td><td>한국 TOP</td><td>20</td><td>16</td><td>2</td><td>3.1초</td><td><span class="status status-approved">성공</span></td></tr>
+            <tr><td>2026-02-02 03:00</td><td>한국 전체</td><td>50</td><td>38</td><td>5</td><td>9.4초</td><td><span class="status status-approved">성공</span></td></tr>
+            <tr><td>2026-02-01 15:00</td><td>한국 신규</td><td>12</td><td>0</td><td>12</td><td>2.8초</td><td><span class="status status-approved">성공</span></td></tr>
+            <tr><td>2026-02-01 03:00</td><td>한국 TOP</td><td>20</td><td>18</td><td>1</td><td>3.5초</td><td><span class="status status-approved">성공</span></td></tr>
+            <tr><td>2026-01-31 15:00</td><td>한국 TOP</td><td>20</td><td>14</td><td>3</td><td>3.2초</td><td><span class="status status-approved">성공</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
     <!-- Settings Panel -->
     <div class="panel" id="panel-settings">
       <h2 style="font-size:22px; margin-bottom:24px;">설정</h2>
@@ -625,28 +736,28 @@ const SYNC_DATA = {
     { rank:1, name:'OpenAI', score:'88,599', country:'🇺🇸 미국', flag:'🇺🇸', change:'+0', isNew:false },
     { rank:2, name:'Revolut', score:'86,372', country:'🇬🇧 영국', flag:'🇬🇧', change:'+1', isNew:false },
     { rank:3, name:'pCloud', score:'86,179', country:'🇧🇬 불가리아', flag:'🇧🇬', change:'-1', isNew:false },
-    { rank:4, name:'Grammarly', score:'85,921', country:'🇺🇸 미국', flag:'🇺🇸', change:'+2', isNew:false },
-    { rank:5, name:'Notion', score:'85,743', country:'🇺🇸 미국', flag:'🇺🇸', change:'+0', isNew:false },
-    { rank:6, name:'Canva', score:'85,502', country:'🇦🇺 호주', flag:'🇦🇺', change:'-2', isNew:false },
-    { rank:7, name:'Figma', score:'85,188', country:'🇺🇸 미국', flag:'🇺🇸', change:'+1', isNew:false },
-    { rank:8, name:'Stripe', score:'84,976', country:'🇺🇸 미국', flag:'🇺🇸', change:'+3', isNew:false },
-    { rank:9, name:'Vercel', score:'84,710', country:'🇺🇸 미국', flag:'🇺🇸', change:'-1', isNew:false },
-    { rank:10, name:'Discord', score:'84,489', country:'🇺🇸 미국', flag:'🇺🇸', change:'+0', isNew:false },
-    { rank:11, name:'Linear', score:'84,210', country:'🇺🇸 미국', flag:'🇺🇸', change:'+5', isNew:false },
-    { rank:12, name:'Supabase', score:'83,980', country:'🇺🇸 미국', flag:'🇺🇸', change:'+3', isNew:false },
-    { rank:13, name:'Midjourney', score:'83,740', country:'🇺🇸 미국', flag:'🇺🇸', change:'-2', isNew:false },
-    { rank:14, name:'Wise', score:'83,510', country:'🇬🇧 영국', flag:'🇬🇧', change:'+1', isNew:false },
-    { rank:15, name:'Deel', score:'83,290', country:'🇺🇸 미국', flag:'🇺🇸', change:'+0', isNew:false },
-    { rank:16, name:'Cursor', score:'83,100', country:'🇺🇸 미국', flag:'🇺🇸', change:'+12', isNew:true },
-    { rank:17, name:'Perplexity', score:'82,870', country:'🇺🇸 미국', flag:'🇺🇸', change:'+8', isNew:true },
-    { rank:18, name:'Retool', score:'82,650', country:'🇺🇸 미국', flag:'🇺🇸', change:'-3', isNew:false },
-    { rank:19, name:'Airtable', score:'82,430', country:'🇺🇸 미국', flag:'🇺🇸', change:'-1', isNew:false },
-    { rank:20, name:'Lemon Squeezy', score:'82,210', country:'🇺🇸 미국', flag:'🇺🇸', change:'+4', isNew:false },
-    { rank:21, name:'Framer', score:'81,990', country:'🇳🇱 네덜란드', flag:'🇳🇱', change:'+2', isNew:false },
-    { rank:22, name:'Bolt', score:'81,770', country:'🇪🇪 에스토니아', flag:'🇪🇪', change:'+0', isNew:false },
-    { rank:23, name:'Render', score:'81,550', country:'🇺🇸 미국', flag:'🇺🇸', change:'-4', isNew:false },
-    { rank:24, name:'Railway', score:'81,330', country:'🇺🇸 미국', flag:'🇺🇸', change:'+6', isNew:true },
-    { rank:25, name:'Dub', score:'81,110', country:'🇺🇸 미국', flag:'🇺🇸', change:'+10', isNew:true },
+    { rank:4, name:'Smallpdf', score:'85,837', country:'🇨🇭 스위스', flag:'🇨🇭', change:'+2', isNew:false },
+    { rank:5, name:'Bark.com', score:'85,082', country:'🇬🇧 영국', flag:'🇬🇧', change:'+0', isNew:false },
+    { rank:6, name:'Cutt.ly', score:'84,827', country:'🇮🇳 인도', flag:'🇮🇳', change:'+3', isNew:false },
+    { rank:7, name:'Surfshark', score:'84,748', country:'🇻🇬 영국령 버진아일랜드', flag:'🇻🇬', change:'-2', isNew:false },
+    { rank:8, name:'Remove.bg', score:'84,581', country:'🇦🇹 오스트리아', flag:'🇦🇹', change:'+1', isNew:false },
+    { rank:9, name:'Payhip', score:'84,566', country:'🇬🇧 영국', flag:'🇬🇧', change:'-1', isNew:false },
+    { rank:10, name:'ilovepdf.com', score:'84,489', country:'🇪🇸 스페인', flag:'🇪🇸', change:'+0', isNew:false },
+    { rank:11, name:'Grammarly', score:'84,210', country:'🇺🇸 미국', flag:'🇺🇸', change:'+2', isNew:false },
+    { rank:12, name:'Canva', score:'83,980', country:'🇦🇺 호주', flag:'🇦🇺', change:'-1', isNew:false },
+    { rank:13, name:'Notion', score:'83,740', country:'🇺🇸 미국', flag:'🇺🇸', change:'+0', isNew:false },
+    { rank:14, name:'Figma', score:'83,510', country:'🇺🇸 미국', flag:'🇺🇸', change:'+1', isNew:false },
+    { rank:15, name:'Stripe', score:'83,290', country:'🇺🇸 미국', flag:'🇺🇸', change:'+0', isNew:false },
+    { rank:16, name:'Wise', score:'83,100', country:'🇬🇧 영국', flag:'🇬🇧', change:'+3', isNew:false },
+    { rank:17, name:'Discord', score:'82,870', country:'🇺🇸 미국', flag:'🇺🇸', change:'-2', isNew:false },
+    { rank:18, name:'Vercel', score:'82,650', country:'🇺🇸 미국', flag:'🇺🇸', change:'+1', isNew:false },
+    { rank:19, name:'Linear', score:'82,430', country:'🇺🇸 미국', flag:'🇺🇸', change:'+5', isNew:false },
+    { rank:20, name:'Midjourney', score:'82,210', country:'🇺🇸 미국', flag:'🇺🇸', change:'-2', isNew:false },
+    { rank:21, name:'Deel', score:'81,990', country:'🇺🇸 미국', flag:'🇺🇸', change:'+0', isNew:false },
+    { rank:22, name:'Ramp', score:'82,083', country:'🇺🇸 미국', flag:'🇺🇸', change:'+16', isNew:true },
+    { rank:23, name:'Supabase', score:'81,770', country:'🇺🇸 미국', flag:'🇺🇸', change:'+3', isNew:false },
+    { rank:24, name:'Bolt', score:'81,550', country:'🇪🇪 에스토니아', flag:'🇪🇪', change:'+0', isNew:false },
+    { rank:25, name:'Framer', score:'81,330', country:'🇳🇱 네덜란드', flag:'🇳🇱', change:'+2', isNew:false },
   ],
   new: [
     { rank:'-', name:'CodeBuddy AI', score:'신규', country:'🇰🇷 한국', flag:'🇰🇷', change:'NEW', isNew:true },
@@ -671,6 +782,38 @@ const SYNC_DATA = {
     { rank:8, name:'Sendbird', score:'71,650', country:'🇰🇷 한국', flag:'🇰🇷', change:'+3', isNew:false },
     { rank:9, name:'Lunit', score:'71,200', country:'🇰🇷 한국', flag:'🇰🇷', change:'+5', isNew:true },
     { rank:10, name:'Rebellions', score:'70,800', country:'🇰🇷 한국', flag:'🇰🇷', change:'+8', isNew:true },
+  ],
+  'kr-top': [
+    { rank:1, name:'Toss', score:'77,890', country:'🇰🇷 한국', flag:'🇰🇷', change:'+0', isNew:false, globalRank:'#41' },
+    { rank:2, name:'Coupang', score:'76,540', country:'🇰🇷 한국', flag:'🇰🇷', change:'+1', isNew:false, globalRank:'#45' },
+    { rank:3, name:'Viva Republica', score:'75,320', country:'🇰🇷 한국', flag:'🇰🇷', change:'-1', isNew:false, globalRank:'#48' },
+    { rank:4, name:'당근마켓', score:'74,800', country:'🇰🇷 한국', flag:'🇰🇷', change:'+2', isNew:false, globalRank:'#50' },
+    { rank:5, name:'야놀자', score:'73,210', country:'🇰🇷 한국', flag:'🇰🇷', change:'+0', isNew:false, globalRank:'#58' },
+    { rank:6, name:'두나무', score:'72,900', country:'🇰🇷 한국', flag:'🇰🇷', change:'-2', isNew:false, globalRank:'#61' },
+    { rank:7, name:'무신사', score:'72,100', country:'🇰🇷 한국', flag:'🇰🇷', change:'+1', isNew:false, globalRank:'#67' },
+    { rank:8, name:'Sendbird', score:'71,650', country:'🇰🇷 한국', flag:'🇰🇷', change:'+3', isNew:false, globalRank:'#72' },
+    { rank:9, name:'Lunit', score:'71,200', country:'🇰🇷 한국', flag:'🇰🇷', change:'+5', isNew:true, globalRank:'#76' },
+    { rank:10, name:'Rebellions', score:'70,800', country:'🇰🇷 한국', flag:'🇰🇷', change:'+8', isNew:true, globalRank:'#80' },
+    { rank:11, name:'컬리', score:'70,350', country:'🇰🇷 한국', flag:'🇰🇷', change:'+0', isNew:false, globalRank:'#85' },
+    { rank:12, name:'직방', score:'69,800', country:'🇰🇷 한국', flag:'🇰🇷', change:'-3', isNew:false, globalRank:'#90' },
+    { rank:13, name:'버킷플레이스', score:'69,250', country:'🇰🇷 한국', flag:'🇰🇷', change:'+1', isNew:false, globalRank:'#95' },
+    { rank:14, name:'크래프톤', score:'68,700', country:'🇰🇷 한국', flag:'🇰🇷', change:'+0', isNew:false, globalRank:'#101' },
+    { rank:15, name:'토스페이먼츠', score:'68,150', country:'🇰🇷 한국', flag:'🇰🇷', change:'+4', isNew:false, globalRank:'#108' },
+    { rank:16, name:'리디', score:'67,600', country:'🇰🇷 한국', flag:'🇰🇷', change:'-1', isNew:false, globalRank:'#115' },
+    { rank:17, name:'스패로우', score:'67,050', country:'🇰🇷 한국', flag:'🇰🇷', change:'+2', isNew:false, globalRank:'#122' },
+    { rank:18, name:'FitPet', score:'66,500', country:'🇰🇷 한국', flag:'🇰🇷', change:'+6', isNew:true, globalRank:'#130' },
+    { rank:19, name:'채널톡', score:'65,950', country:'🇰🇷 한국', flag:'🇰🇷', change:'+3', isNew:false, globalRank:'#138' },
+    { rank:20, name:'Upstage', score:'65,400', country:'🇰🇷 한국', flag:'🇰🇷', change:'+10', isNew:true, globalRank:'#146' },
+  ],
+  'kr-new': [
+    { rank:'-', name:'DeepNatural AI', score:'신규', country:'🇰🇷 한국', flag:'🇰🇷', change:'NEW', isNew:true, globalRank:'-' },
+    { rank:'-', name:'플렉슬', score:'신규', country:'🇰🇷 한국', flag:'🇰🇷', change:'NEW', isNew:true, globalRank:'-' },
+    { rank:'-', name:'모레', score:'신규', country:'🇰🇷 한국', flag:'🇰🇷', change:'NEW', isNew:true, globalRank:'-' },
+    { rank:'-', name:'Moloco', score:'신규', country:'🇰🇷 한국', flag:'🇰🇷', change:'NEW', isNew:true, globalRank:'-' },
+    { rank:'-', name:'뷰노', score:'신규', country:'🇰🇷 한국', flag:'🇰🇷', change:'NEW', isNew:true, globalRank:'-' },
+    { rank:'-', name:'코드스테이츠', score:'신규', country:'🇰🇷 한국', flag:'🇰🇷', change:'NEW', isNew:true, globalRank:'-' },
+    { rank:'-', name:'마이리얼트립', score:'신규', country:'🇰🇷 한국', flag:'🇰🇷', change:'NEW', isNew:true, globalRank:'-' },
+    { rank:'-', name:'스켈터랩스', score:'신규', country:'🇰🇷 한국', flag:'🇰🇷', change:'NEW', isNew:true, globalRank:'-' },
   ]
 };
 
@@ -832,6 +975,166 @@ function applyAll() {
 function exportData() {
   addLog('📥 CSV 형식으로 내보내기 완료 (sync_data_' + Date.now() + '.csv)', '#499cd7');
   alert('데이터가 CSV 형식으로 내보내기 되었습니다.');
+}
+
+// ========== Korea Sync Feature ==========
+let krSyncRunning = false;
+let krSyncTimer = null;
+
+function addKrLog(msg, color) {
+  const log = document.getElementById('krSyncLog');
+  const time = new Date().toLocaleTimeString('ko-KR');
+  const div = document.createElement('div');
+  div.style.color = color || '#8899aa';
+  div.textContent = '[' + time + '] ' + msg;
+  log.appendChild(div);
+  log.scrollTop = log.scrollHeight;
+}
+
+function previewKrSync() {
+  document.getElementById('krSyncProgress').style.display = 'block';
+  document.getElementById('krSyncLog').innerHTML = '';
+  addKrLog('미리보기 모드 - startupranking.com/top/country/south-korea 접속 시뮬레이션...', '#ff9800');
+
+  const src = document.getElementById('krSyncSource').value;
+  const limit = parseInt(document.getElementById('krSyncLimit').value);
+  const data = (SYNC_DATA[src] || SYNC_DATA['kr-top']).slice(0, limit);
+
+  setTimeout(() => {
+    addKrLog('데이터 소스: ' + document.getElementById('krSyncSource').selectedOptions[0].text, '#fff');
+    addKrLog('가져올 항목: ' + data.length + '개 (미리보기)', '#fff');
+    renderKrSyncTable(data);
+    addKrLog('미리보기 로드 완료. "한국 동기화 시작"을 눌러 반영하세요.', '#ff9800');
+  }, 500);
+}
+
+function startKrSync() {
+  if (krSyncRunning) return;
+  krSyncRunning = true;
+
+  const src = document.getElementById('krSyncSource').value;
+  const limit = parseInt(document.getElementById('krSyncLimit').value);
+  const data = (SYNC_DATA[src] || SYNC_DATA['kr-top']).slice(0, limit);
+  const total = data.length;
+
+  document.getElementById('krSyncProgress').style.display = 'block';
+  document.getElementById('krSyncSpinner').style.display = 'inline';
+  document.getElementById('krSyncStatusText').textContent = '동기화 중...';
+  document.getElementById('krSyncStatusText').style.color = '#ff9800';
+  document.getElementById('krSyncLog').innerHTML = '';
+  document.getElementById('krSyncBar').style.width = '0%';
+
+  addKrLog('startupranking.com/top/country/south-korea 에 연결 중...', '#ff9800');
+
+  let step = 0;
+  const steps = [
+    { msg: 'startupranking.com 연결 성공 (HTTP 200)', color: '#4caf50', pct: 5 },
+    { msg: '인증 토큰 확인 완료', color: '#4caf50', pct: 10 },
+    { msg: 'API 엔드포인트: /api/v1/country/kr/' + src.replace('kr-','') + ' 접근 중...', color: '#fff', pct: 15 },
+    { msg: '데이터 소스: ' + document.getElementById('krSyncSource').selectedOptions[0].text, color: '#fff', pct: 20 },
+    { msg: '대한민국 🇰🇷 총 ' + total + '개 항목 수신 시작...', color: '#fff', pct: 25 },
+  ];
+
+  data.forEach((item, i) => {
+    const pct = 25 + Math.round((i + 1) / total * 60);
+    steps.push({
+      msg: '[' + (i+1) + '/' + total + '] ' + item.name + ' (Score: ' + item.score + ', 글로벌: ' + (item.globalRank||'-') + ') ' + (item.isNew ? '← 신규!' : '← 업데이트'),
+      color: item.isNew ? '#ff9800' : '#8899aa',
+      pct: pct
+    });
+  });
+
+  steps.push({ msg: '한국 데이터 무결성 검증 중...', color: '#fff', pct: 90 });
+  steps.push({ msg: '로컬 데이터베이스에 반영 중...', color: '#fff', pct: 95 });
+  steps.push({ msg: '✅ 한국 데이터 동기화 완료! ' + total + '개 항목 처리됨', color: '#4caf50', pct: 100 });
+
+  function runStep() {
+    if (step >= steps.length || !krSyncRunning) {
+      krSyncRunning = false;
+      document.getElementById('krSyncSpinner').style.display = 'none';
+      if (step >= steps.length) {
+        const now = new Date().toLocaleString('ko-KR');
+        document.getElementById('krLastSyncTime').textContent = now;
+        document.getElementById('krSyncStatusText').textContent = '완료';
+        document.getElementById('krSyncStatusText').style.color = '#4caf50';
+        document.getElementById('krSyncedCount').textContent = total.toLocaleString();
+        document.getElementById('krUpdatedCount').textContent = data.filter(d => !d.isNew).length;
+        renderKrSyncTable(data);
+      }
+      return;
+    }
+    const s = steps[step];
+    addKrLog(s.msg, s.color);
+    document.getElementById('krSyncBar').style.width = s.pct + '%';
+    document.getElementById('krSyncPercent').textContent = s.pct + '%';
+    document.getElementById('krSyncProgressText').textContent = step < steps.length - 1 ? '처리 중...' : '완료!';
+    step++;
+    krSyncTimer = setTimeout(runStep, 150 + Math.random() * 200);
+  }
+
+  setTimeout(runStep, 600);
+}
+
+function stopKrSync() {
+  krSyncRunning = false;
+  clearTimeout(krSyncTimer);
+  document.getElementById('krSyncSpinner').style.display = 'none';
+  document.getElementById('krSyncStatusText').textContent = '중지됨';
+  document.getElementById('krSyncStatusText').style.color = '#e53935';
+  addKrLog('⏹ 한국 동기화가 사용자에 의해 중지되었습니다.', '#e53935');
+}
+
+function renderKrSyncTable(data) {
+  const tbody = document.getElementById('krSyncTableBody');
+  tbody.innerHTML = '';
+  document.getElementById('krSyncResultTable').style.display = 'block';
+  document.getElementById('krFetchedCountBadge').textContent = data.length + '건';
+
+  data.forEach(item => {
+    const changeNum = parseInt(item.change);
+    let changeHtml = '';
+    if (item.change === 'NEW') {
+      changeHtml = '<span style="color:#ff9800; font-weight:700;">NEW</span>';
+    } else if (changeNum > 0) {
+      changeHtml = '<span style="color:#4caf50;">▲ ' + item.change + '</span>';
+    } else if (changeNum < 0) {
+      changeHtml = '<span style="color:#e53935;">▼ ' + item.change + '</span>';
+    } else {
+      changeHtml = '<span style="color:#999;">-</span>';
+    }
+
+    const statusHtml = item.isNew
+      ? '<span class="status" style="background:#fff3e0; color:#e65100;">신규</span>'
+      : '<span class="status" style="background:#fff8e1; color:#f57f17;">업데이트</span>';
+
+    const tr = document.createElement('tr');
+    tr.innerHTML = '<td>' + item.rank + '</td>'
+      + '<td><strong>' + item.name + '</strong></td>'
+      + '<td>' + item.score + '</td>'
+      + '<td>' + (item.globalRank || '-') + '</td>'
+      + '<td>' + changeHtml + '</td>'
+      + '<td>' + statusHtml + '</td>'
+      + '<td><button class="action-btn approve" onclick="applyKrItem(this)">반영</button><button class="action-btn" onclick="this.closest(\'tr\').remove()">무시</button></td>';
+    tbody.appendChild(tr);
+  });
+}
+
+function applyKrItem(btn) {
+  const tr = btn.closest('tr');
+  tr.style.background = '#fff3e0';
+  btn.textContent = '반영됨';
+  btn.disabled = true;
+  btn.style.opacity = '.5';
+}
+
+function applyAllKr() {
+  document.querySelectorAll('#krSyncTableBody .approve').forEach(btn => applyKrItem(btn));
+  addKrLog('✅ 전체 한국 데이터가 사이트에 반영되었습니다.', '#4caf50');
+}
+
+function exportKrData() {
+  addKrLog('📥 CSV 형식으로 내보내기 완료 (kr_sync_data_' + Date.now() + '.csv)', '#499cd7');
+  alert('한국 데이터가 CSV 형식으로 내보내기 되었습니다.');
 }
 </script>
 

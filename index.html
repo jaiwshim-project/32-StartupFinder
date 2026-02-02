@@ -237,33 +237,18 @@ footer .copy { font-size: 13px; color: #556; }
 
 <!-- Top Startups Ranking -->
 <div class="ranking-section" id="ranking">
-  <h2>글로벌 스타트업 랭킹 TOP 10</h2>
-  <p class="subtitle">SF Score 기반 전 세계 스타트업 순위</p>
-  <div class="filter-row">
-    <select class="filter-select">
-      <option>전체 국가</option>
-      <option>미국</option>
-      <option>영국</option>
-      <option>한국</option>
-      <option>일본</option>
-      <option>독일</option>
-      <option>인도</option>
-    </select>
-    <select class="filter-select">
-      <option>전체 카테고리</option>
-      <option>AI / 머신러닝</option>
-      <option>핀테크</option>
-      <option>SaaS</option>
-      <option>이커머스</option>
-      <option>헬스케어</option>
-    </select>
+  <div style="display:flex;gap:0;margin-bottom:16px;">
+    <button class="tab active" id="tabGlobal" onclick="switchMainTab('global')">🌍 글로벌 TOP 10</button>
+    <button class="tab" id="tabKorea" onclick="switchMainTab('korea')">🇰🇷 한국 TOP 10</button>
   </div>
+  <h2 id="mainRankTitle">글로벌 스타트업 랭킹 TOP 10</h2>
+  <p class="subtitle" id="mainRankSubtitle">SR Score 기반 전 세계 스타트업 순위</p>
   <div class="table-wrap">
     <table class="rank-table">
-      <thead>
-        <tr><th>순위</th><th>스타트업</th><th>SF Score</th><th>국가</th><th>국가 순위</th></tr>
+      <thead id="mainRankHead">
+        <tr><th>순위</th><th>스타트업</th><th>SR Score</th><th>국가</th><th>국가 순위</th></tr>
       </thead>
-      <tbody>
+      <tbody id="mainRankBody">
         <tr>
           <td class="rank-num rank-1">1</td>
           <td><div class="startup-info"><div class="startup-logo">O</div><div><div class="startup-name">OpenAI</div><div class="startup-desc">AI 연구 및 배포를 선도하는 기업</div></div></div></td>
@@ -274,70 +259,70 @@ footer .copy { font-size: 13px; color: #556; }
         <tr>
           <td class="rank-num rank-2">2</td>
           <td><div class="startup-info"><div class="startup-logo">R</div><div><div class="startup-name">Revolut</div><div class="startup-desc">글로벌 핀테크 슈퍼앱</div></div></div></td>
-          <td><div class="sr-score">86,372</div><div class="sr-score-bar"><div class="sr-score-fill" style="width:95%"></div></div></td>
+          <td><div class="sr-score">86,372</div><div class="sr-score-bar"><div class="sr-score-fill" style="width:97%"></div></div></td>
           <td><span class="country-badge"><span class="country-flag">🇬🇧</span> 영국</span></td>
           <td class="country-rank">#1</td>
         </tr>
         <tr>
           <td class="rank-num rank-3">3</td>
           <td><div class="startup-info"><div class="startup-logo">P</div><div><div class="startup-name">pCloud</div><div class="startup-desc">보안 클라우드 스토리지 서비스</div></div></div></td>
-          <td><div class="sr-score">86,179</div><div class="sr-score-bar"><div class="sr-score-fill" style="width:94%"></div></div></td>
+          <td><div class="sr-score">86,179</div><div class="sr-score-bar"><div class="sr-score-fill" style="width:97%"></div></div></td>
           <td><span class="country-badge"><span class="country-flag">🇧🇬</span> 불가리아</span></td>
           <td class="country-rank">#1</td>
         </tr>
         <tr>
           <td class="rank-num">4</td>
-          <td><div class="startup-info"><div class="startup-logo">G</div><div><div class="startup-name">Grammarly</div><div class="startup-desc">AI 기반 글쓰기 어시스턴트</div></div></div></td>
-          <td><div class="sr-score">85,921</div><div class="sr-score-bar"><div class="sr-score-fill" style="width:93%"></div></div></td>
-          <td><span class="country-badge"><span class="country-flag">🇺🇸</span> 미국</span></td>
-          <td class="country-rank">#2</td>
+          <td><div class="startup-info"><div class="startup-logo">S</div><div><div class="startup-name">Smallpdf</div><div class="startup-desc">온라인 PDF 솔루션 플랫폼</div></div></div></td>
+          <td><div class="sr-score">85,837</div><div class="sr-score-bar"><div class="sr-score-fill" style="width:96%"></div></div></td>
+          <td><span class="country-badge"><span class="country-flag">🇨🇭</span> 스위스</span></td>
+          <td class="country-rank">#1</td>
         </tr>
         <tr>
           <td class="rank-num">5</td>
-          <td><div class="startup-info"><div class="startup-logo">N</div><div><div class="startup-name">Notion</div><div class="startup-desc">올인원 워크스페이스 플랫폼</div></div></div></td>
-          <td><div class="sr-score">85,743</div><div class="sr-score-bar"><div class="sr-score-fill" style="width:92%"></div></div></td>
-          <td><span class="country-badge"><span class="country-flag">🇺🇸</span> 미국</span></td>
-          <td class="country-rank">#3</td>
+          <td><div class="startup-info"><div class="startup-logo">B</div><div><div class="startup-name">Bark.com</div><div class="startup-desc">로컬 서비스 매칭 마켓플레이스</div></div></div></td>
+          <td><div class="sr-score">85,082</div><div class="sr-score-bar"><div class="sr-score-fill" style="width:95%"></div></div></td>
+          <td><span class="country-badge"><span class="country-flag">🇬🇧</span> 영국</span></td>
+          <td class="country-rank">#2</td>
         </tr>
         <tr>
           <td class="rank-num">6</td>
-          <td><div class="startup-info"><div class="startup-logo">C</div><div><div class="startup-name">Canva</div><div class="startup-desc">온라인 디자인 및 퍼블리싱 플랫폼</div></div></div></td>
-          <td><div class="sr-score">85,502</div><div class="sr-score-bar"><div class="sr-score-fill" style="width:91%"></div></div></td>
-          <td><span class="country-badge"><span class="country-flag">🇦🇺</span> 호주</span></td>
+          <td><div class="startup-info"><div class="startup-logo">C</div><div><div class="startup-name">Cutt.ly</div><div class="startup-desc">URL 단축 및 링크 관리 플랫폼</div></div></div></td>
+          <td><div class="sr-score">84,827</div><div class="sr-score-bar"><div class="sr-score-fill" style="width:95%"></div></div></td>
+          <td><span class="country-badge"><span class="country-flag">🇮🇳</span> 인도</span></td>
           <td class="country-rank">#1</td>
         </tr>
         <tr>
           <td class="rank-num">7</td>
-          <td><div class="startup-info"><div class="startup-logo">F</div><div><div class="startup-name">Figma</div><div class="startup-desc">협업 인터페이스 디자인 도구</div></div></div></td>
-          <td><div class="sr-score">85,188</div><div class="sr-score-bar"><div class="sr-score-fill" style="width:90%"></div></div></td>
-          <td><span class="country-badge"><span class="country-flag">🇺🇸</span> 미국</span></td>
-          <td class="country-rank">#4</td>
+          <td><div class="startup-info"><div class="startup-logo">S</div><div><div class="startup-name">Surfshark</div><div class="startup-desc">VPN 및 디지털 보안 서비스</div></div></div></td>
+          <td><div class="sr-score">84,748</div><div class="sr-score-bar"><div class="sr-score-fill" style="width:95%"></div></div></td>
+          <td><span class="country-badge"><span class="country-flag">🇻🇬</span> 영국령 버진아일랜드</span></td>
+          <td class="country-rank">#1</td>
         </tr>
         <tr>
           <td class="rank-num">8</td>
-          <td><div class="startup-info"><div class="startup-logo">S</div><div><div class="startup-name">Stripe</div><div class="startup-desc">온라인 결제 인프라 플랫폼</div></div></div></td>
-          <td><div class="sr-score">84,976</div><div class="sr-score-bar"><div class="sr-score-fill" style="width:89%"></div></div></td>
-          <td><span class="country-badge"><span class="country-flag">🇺🇸</span> 미국</span></td>
-          <td class="country-rank">#5</td>
+          <td><div class="startup-info"><div class="startup-logo">R</div><div><div class="startup-name">Remove.bg</div><div class="startup-desc">AI 기반 이미지 배경 제거 도구</div></div></div></td>
+          <td><div class="sr-score">84,581</div><div class="sr-score-bar"><div class="sr-score-fill" style="width:95%"></div></div></td>
+          <td><span class="country-badge"><span class="country-flag">🇦🇹</span> 오스트리아</span></td>
+          <td class="country-rank">#1</td>
         </tr>
         <tr>
           <td class="rank-num">9</td>
-          <td><div class="startup-info"><div class="startup-logo">V</div><div><div class="startup-name">Vercel</div><div class="startup-desc">프론트엔드 클라우드 플랫폼</div></div></div></td>
-          <td><div class="sr-score">84,710</div><div class="sr-score-bar"><div class="sr-score-fill" style="width:88%"></div></div></td>
-          <td><span class="country-badge"><span class="country-flag">🇺🇸</span> 미국</span></td>
-          <td class="country-rank">#6</td>
+          <td><div class="startup-info"><div class="startup-logo">P</div><div><div class="startup-name">Payhip</div><div class="startup-desc">디지털 상품 판매 플랫폼</div></div></div></td>
+          <td><div class="sr-score">84,566</div><div class="sr-score-bar"><div class="sr-score-fill" style="width:95%"></div></div></td>
+          <td><span class="country-badge"><span class="country-flag">🇬🇧</span> 영국</span></td>
+          <td class="country-rank">#3</td>
         </tr>
         <tr>
           <td class="rank-num">10</td>
-          <td><div class="startup-info"><div class="startup-logo">D</div><div><div class="startup-name">Discord</div><div class="startup-desc">커뮤니티를 위한 커뮤니케이션 플랫폼</div></div></div></td>
-          <td><div class="sr-score">84,489</div><div class="sr-score-bar"><div class="sr-score-fill" style="width:87%"></div></div></td>
-          <td><span class="country-badge"><span class="country-flag">🇺🇸</span> 미국</span></td>
-          <td class="country-rank">#7</td>
+          <td><div class="startup-info"><div class="startup-logo">I</div><div><div class="startup-name">ilovepdf.com</div><div class="startup-desc">온라인 PDF 편집 및 변환 도구</div></div></div></td>
+          <td><div class="sr-score">84,489</div><div class="sr-score-bar"><div class="sr-score-fill" style="width:95%"></div></div></td>
+          <td><span class="country-badge"><span class="country-flag">🇪🇸</span> 스페인</span></td>
+          <td class="country-rank">#1</td>
         </tr>
       </tbody>
     </table>
   </div>
-  <div class="view-all"><a href="#" class="btn btn-outline">전체 랭킹 보기</a></div>
+  <div class="view-all" id="mainViewAll"><a href="ranking.html" class="btn btn-outline">전체 랭킹 보기 (TOP 50)</a></div>
 </div>
 
 <!-- New Startups -->
@@ -743,6 +728,59 @@ footer .copy { font-size: 13px; color: #556; }
   <div style="margin-top:20px;"><a href="admin.html" style="display:inline-block; padding:8px 20px; background:#e53935; color:#fff; font-size:13px; font-weight:600; text-decoration:none; border-radius:6px; transition:background .2s;" onmouseover="this.style.background='#c62828'" onmouseout="this.style.background='#e53935'">🔒 관리자 대시보드</a></div>
 </footer>
 
+<script>
+const krTop10 = [
+  { rank:1, name:'Toss', logo:'T', desc:'모바일 금융 슈퍼앱', score:'77,890', pct:100, globalRank:'#41', change:'+0', cat:'핀테크' },
+  { rank:2, name:'Coupang', logo:'C', desc:'한국 대표 이커머스 플랫폼', score:'76,540', pct:98, globalRank:'#45', change:'+1', cat:'SaaS' },
+  { rank:3, name:'Viva Republica', logo:'V', desc:'토스 운영사, 핀테크 유니콘', score:'75,320', pct:96, globalRank:'#48', change:'-1', cat:'핀테크' },
+  { rank:4, name:'당근마켓', logo:'당', desc:'지역 기반 중고거래 플랫폼', score:'74,800', pct:96, globalRank:'#50', change:'+2', cat:'SaaS' },
+  { rank:5, name:'야놀자', logo:'야', desc:'여행 및 여가 플랫폼', score:'73,210', pct:94, globalRank:'#58', change:'+0', cat:'SaaS' },
+  { rank:6, name:'두나무', logo:'두', desc:'업비트 운영사, 블록체인 기업', score:'72,900', pct:93, globalRank:'#61', change:'-2', cat:'핀테크' },
+  { rank:7, name:'무신사', logo:'무', desc:'패션 이커머스 플랫폼', score:'72,100', pct:92, globalRank:'#67', change:'+1', cat:'SaaS' },
+  { rank:8, name:'Sendbird', logo:'S', desc:'인앱 채팅 & 메시징 API', score:'71,650', pct:92, globalRank:'#72', change:'+3', cat:'SaaS' },
+  { rank:9, name:'Lunit', logo:'L', desc:'AI 기반 의료 영상 분석', score:'71,200', pct:91, globalRank:'#76', change:'+5', isNew:true, cat:'AI' },
+  { rank:10, name:'Rebellions', logo:'R', desc:'AI 반도체 설계 스타트업', score:'70,800', pct:90, globalRank:'#80', change:'+8', isNew:true, cat:'AI' },
+];
+
+let globalTableHTML = '';
+function switchMainTab(tab) {
+  document.getElementById('tabGlobal').classList.toggle('active', tab === 'global');
+  document.getElementById('tabKorea').classList.toggle('active', tab === 'korea');
+  const tbody = document.getElementById('mainRankBody');
+  const thead = document.getElementById('mainRankHead');
+  const title = document.getElementById('mainRankTitle');
+  const subtitle = document.getElementById('mainRankSubtitle');
+  const viewAll = document.getElementById('mainViewAll');
+
+  if (tab === 'korea') {
+    if (!globalTableHTML) globalTableHTML = tbody.innerHTML;
+    title.textContent = '한국 스타트업 랭킹 TOP 10';
+    subtitle.textContent = 'SR Score 기반 대한민국 스타트업 순위';
+    thead.innerHTML = '<tr><th>순위</th><th>스타트업</th><th>SR Score</th><th>글로벌 순위</th><th>변동</th></tr>';
+    viewAll.innerHTML = '<a href="ranking.html#korea" class="btn btn-outline">한국 전체 랭킹 보기 (TOP 20)</a>';
+    tbody.innerHTML = krTop10.map(function(s) {
+      var rc = s.rank <= 3 ? ' rank-' + s.rank : '';
+      var cv = parseInt(s.change);
+      var ch = s.isNew ? '<span style="color:#2e7d32;font-size:12px;font-weight:600">NEW</span>' :
+        cv > 0 ? '<span style="color:#2e7d32;font-size:12px;font-weight:600">&#9650; ' + s.change + '</span>' :
+        cv < 0 ? '<span style="color:#c62828;font-size:12px;font-weight:600">&#9660; ' + s.change + '</span>' :
+        '<span style="color:#999;font-size:12px">&#8212;</span>';
+      var nt = s.isNew ? '<span style="display:inline-block;padding:2px 6px;background:#e8f5e9;color:#2e7d32;border-radius:4px;font-size:10px;font-weight:700;margin-left:6px">NEW</span>' : '';
+      return '<tr><td class="rank-num' + rc + '">' + s.rank + '</td>' +
+        '<td><div class="startup-info"><div class="startup-logo">' + s.logo + '</div><div><div class="startup-name">' + s.name + nt + '</div><div class="startup-desc">' + s.desc + '</div></div></div></td>' +
+        '<td><div class="sr-score">' + s.score + '</div><div class="sr-score-bar"><div class="sr-score-fill" style="width:' + s.pct + '%"></div></div></td>' +
+        '<td class="country-rank">' + s.globalRank + '</td>' +
+        '<td>' + ch + '</td></tr>';
+    }).join('');
+  } else {
+    title.textContent = '글로벌 스타트업 랭킹 TOP 10';
+    subtitle.textContent = 'SR Score 기반 전 세계 스타트업 순위';
+    thead.innerHTML = '<tr><th>순위</th><th>스타트업</th><th>SR Score</th><th>국가</th><th>국가 순위</th></tr>';
+    viewAll.innerHTML = '<a href="ranking.html" class="btn btn-outline">전체 랭킹 보기 (TOP 50)</a>';
+    if (globalTableHTML) tbody.innerHTML = globalTableHTML;
+  }
+}
+</script>
 </body>
 </html>
 

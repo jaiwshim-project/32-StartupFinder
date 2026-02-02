@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>전체 스타트업 랭킹 TOP 50 - StartupFinder</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif; color: #333; background: #f5f7fa; }
+
+/* Header */
+header { background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.08); position: sticky; top: 0; z-index: 100; }
+.header-inner { max-width: 1200px; margin: 0 auto; padding: 0 20px; display: flex; align-items: center; justify-content: space-between; height: 64px; }
+.logo { font-size: 22px; font-weight: 700; color: #499cd7; text-decoration: none; }
+.logo span { color: #333; }
+nav a { text-decoration: none; color: #555; margin-left: 28px; font-size: 15px; font-weight: 500; transition: color .2s; }
+nav a:hover { color: #499cd7; }
+
+/* Page Header */
+.page-header { background: linear-gradient(135deg, #499cd7 0%, #2c6faa 100%); color: #fff; text-align: center; padding: 48px 20px 40px; }
+.page-header h1 { font-size: 32px; margin-bottom: 10px; }
+.page-header p { font-size: 15px; opacity: .9; max-width: 600px; margin: 0 auto; }
+
+/* Stats Bar */
+.stats-bar { background: #fff; border-bottom: 1px solid #eee; padding: 16px 20px; }
+.stats-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: center; gap: 48px; }
+.stat-item { text-align: center; }
+.stat-num { font-size: 24px; font-weight: 800; color: #499cd7; }
+.stat-label { font-size: 12px; color: #999; margin-top: 2px; }
+
+/* Ranking */
+.ranking-section { max-width: 1200px; margin: 30px auto 50px; padding: 0 20px; }
+.ranking-section h2 { font-size: 22px; margin-bottom: 4px; }
+.ranking-section .subtitle { color: #777; margin-bottom: 20px; font-size: 14px; }
+
+/* Filters */
+.filter-row { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
+.filter-select { padding: 8px 16px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; color: #555; background: #fff; cursor: pointer; outline: none; }
+.filter-select:focus { border-color: #499cd7; }
+.search-input { padding: 8px 16px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; color: #555; background: #fff; outline: none; width: 220px; }
+.search-input:focus { border-color: #499cd7; }
+
+/* Table */
+.table-wrap { overflow-x: auto; background: #fff; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+.rank-table { width: 100%; border-collapse: collapse; min-width: 800px; }
+.rank-table thead { background: #499cd7; color: #fff; }
+.rank-table th { padding: 12px 16px; text-align: left; font-size: 13px; font-weight: 600; }
+.rank-table td { padding: 14px 16px; border-bottom: 1px solid #f0f0f0; font-size: 14px; vertical-align: middle; }
+.rank-table tr:hover { background: #f8fbff; }
+.rank-num { font-size: 18px; font-weight: 800; color: #499cd7; width: 50px; }
+.rank-1 { color: #ffd700; }
+.rank-2 { color: #c0c0c0; }
+.rank-3 { color: #cd7f32; }
+.startup-info { display: flex; align-items: center; gap: 12px; }
+.startup-logo { width: 40px; height: 40px; border-radius: 8px; background: #e8eef4; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 16px; color: #499cd7; flex-shrink: 0; }
+.startup-name { font-weight: 700; color: #333; font-size: 15px; }
+.startup-desc { color: #888; font-size: 12px; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 320px; }
+.sr-score { font-weight: 800; font-size: 16px; color: #333; }
+.sr-score-bar { width: 80px; height: 6px; background: #e0e0e0; border-radius: 3px; margin-top: 4px; }
+.sr-score-fill { height: 100%; border-radius: 3px; background: linear-gradient(90deg, #499cd7, #2c6faa); }
+.country-badge { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: #555; }
+.country-flag { font-size: 18px; }
+.country-rank { font-size: 11px; color: #999; }
+.change-up { color: #2e7d32; font-size: 12px; font-weight: 600; }
+.change-down { color: #c62828; font-size: 12px; font-weight: 600; }
+.change-same { color: #999; font-size: 12px; }
+.new-tag { display: inline-block; padding: 2px 6px; background: #e8f5e9; color: #2e7d32; border-radius: 4px; font-size: 10px; font-weight: 700; margin-left: 6px; }
+
+/* Tabs */
+.ranking-tabs { display: flex; gap: 0; margin-bottom: 24px; }
+.ranking-tab { padding: 12px 28px; background: #e8eef4; color: #555; font-weight: 600; font-size: 14px; cursor: pointer; border: none; border-radius: 8px 8px 0 0; transition: all .2s; }
+.ranking-tab.active { background: #499cd7; color: #fff; }
+.ranking-tab:hover:not(.active) { background: #d0dce6; }
+
+/* Source */
+.source-info { text-align: center; margin-top: 30px; padding: 20px; color: #999; font-size: 13px; }
+.source-info a { color: #499cd7; text-decoration: none; }
+.source-info a:hover { text-decoration: underline; }
+
+/* Back */
+.back-link { display: inline-flex; align-items: center; gap: 6px; color: #499cd7; text-decoration: none; font-size: 14px; font-weight: 600; margin-bottom: 20px; }
+.back-link:hover { text-decoration: underline; }
+
+/* Footer */
+footer { background: #1a2332; color: #aab; padding: 40px 20px; text-align: center; }
+footer .links { margin-bottom: 16px; }
+footer .links a { color: #8899aa; text-decoration: none; margin: 0 12px; font-size: 14px; }
+footer .links a:hover { color: #fff; }
+footer .copy { font-size: 13px; color: #556; }
+
+/* Responsive */
+@media (max-width: 768px) {
+  nav { display: none; }
+  .stats-inner { gap: 20px; flex-wrap: wrap; }
+  .page-header h1 { font-size: 24px; }
+  .filter-row { flex-direction: column; align-items: stretch; }
+  .search-input { width: 100%; }
+  .startup-desc { max-width: 160px; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <a href="index.html" class="logo">Startup<span>Finder</span></a>
+    <nav>
+      <a href="about.html">소개</a>
+      <a href="how-it-works.html">작동 원리</a>
+      <a href="index.html#ranking">랭킹</a>
+      <a href="countries.html">국가별</a>
+      <a href="index.html#directories">디렉토리</a>
+      <a href="faster-approval.html">빠른 승인</a>
+      <a href="booster.html">부스터</a>
+      <a href="premium-profile.html">프리미엄</a>
+      <a href="advertising.html">광고</a>
+      <a href="blog.html">블로그</a>
+      <a href="create.html">스타트업 등록</a>
+    </nav>
+  </div>
+</header>
+
+<div class="page-header">
+  <h1 id="pageTitle">글로벌 스타트업 랭킹 TOP 50</h1>
+  <p id="pageSubtitle">SR Score 기반 전 세계 스타트업 순위 - startupranking.com 데이터 기반</p>
+</div>
+
+<div class="stats-bar">
+  <div class="stats-inner">
+    <div class="stat-item"><div class="stat-num">152,340</div><div class="stat-label">등록 스타트업</div></div>
+    <div class="stat-item"><div class="stat-num">195</div><div class="stat-label">국가</div></div>
+    <div class="stat-item"><div class="stat-num">1일 전</div><div class="stat-label">마지막 업데이트</div></div>
+    <div class="stat-item"><div class="stat-num">2,847</div><div class="stat-label">이번 주 신규</div></div>
+  </div>
+</div>
+
+<div class="ranking-section">
+  <a href="index.html#ranking" class="back-link">&larr; 메인으로 돌아가기</a>
+
+  <div class="ranking-tabs">
+    <button class="ranking-tab active" onclick="switchTab('global')">🌍 글로벌 TOP 50</button>
+    <button class="ranking-tab" onclick="switchTab('korea')">🇰🇷 한국 TOP 20</button>
+  </div>
+
+  <div class="filter-row">
+    <input type="text" class="search-input" placeholder="스타트업 검색..." id="searchInput" oninput="filterTable()">
+    <select class="filter-select" id="countryFilter" onchange="filterTable()">
+      <option value="">전체 국가</option>
+      <option value="미국">미국</option>
+      <option value="영국">영국</option>
+      <option value="인도">인도</option>
+      <option value="스위스">스위스</option>
+      <option value="불가리아">불가리아</option>
+      <option value="스페인">스페인</option>
+      <option value="오스트리아">오스트리아</option>
+      <option value="독일">독일</option>
+      <option value="프랑스">프랑스</option>
+      <option value="네덜란드">네덜란드</option>
+      <option value="호주">호주</option>
+      <option value="에스토니아">에스토니아</option>
+      <option value="브라질">브라질</option>
+      <option value="이스라엘">이스라엘</option>
+      <option value="싱가포르">싱가포르</option>
+      <option value="한국">한국</option>
+    </select>
+    <select class="filter-select" id="categoryFilter" onchange="filterTable()">
+      <option value="">전체 카테고리</option>
+      <option value="AI">AI / 머신러닝</option>
+      <option value="핀테크">핀테크</option>
+      <option value="SaaS">SaaS</option>
+      <option value="클라우드">클라우드</option>
+      <option value="보안">보안</option>
+      <option value="디자인">디자인</option>
+      <option value="생산성">생산성</option>
+    </select>
+  </div>
+
+  <div class="table-wrap">
+    <table class="rank-table" id="rankTable">
+      <thead>
+        <tr><th>순위</th><th>스타트업</th><th>SR Score</th><th>국가</th><th>국가 순위</th><th>변동</th></tr>
+      </thead>
+      <tbody id="rankBody">
+      </tbody>
+    </table>
+  </div>
+
+  <div class="source-info">
+    데이터 출처: <a href="https://www.startupranking.com/top" target="_blank" rel="noopener">startupranking.com/top</a> | 마지막 동기화: 2026년 2월 2일
+  </div>
+</div>
+
+<footer>
+  <div class="links">
+    <a href="#">이용약관</a>
+    <a href="#">개인정보처리방침</a>
+    <a href="#">FAQ</a>
+    <a href="#">문의하기</a>
+  </div>
+  <p class="copy">&copy; 2026 StartupFinder. All rights reserved.</p>
+</footer>
+
+<script>
+const globalRankings = [
+  { rank:1, name:'OpenAI', logo:'O', desc:'AI 연구 및 배포를 선도하는 기업', score:'88,599', pct:100, flag:'🇺🇸', country:'미국', cRank:'#1', change:'+0', cat:'AI' },
+  { rank:2, name:'Revolut', logo:'R', desc:'글로벌 핀테크 슈퍼앱', score:'86,372', pct:97, flag:'🇬🇧', country:'영국', cRank:'#1', change:'+1', cat:'핀테크' },
+  { rank:3, name:'pCloud', logo:'P', desc:'보안 클라우드 스토리지 서비스', score:'86,179', pct:97, flag:'🇧🇬', country:'불가리아', cRank:'#1', change:'-1', cat:'클라우드' },
+  { rank:4, name:'Smallpdf', logo:'S', desc:'온라인 PDF 솔루션 플랫폼', score:'85,837', pct:96, flag:'🇨🇭', country:'스위스', cRank:'#1', change:'+2', cat:'SaaS' },
+  { rank:5, name:'Bark.com', logo:'B', desc:'로컬 서비스 매칭 마켓플레이스', score:'85,082', pct:95, flag:'🇬🇧', country:'영국', cRank:'#2', change:'+0', cat:'SaaS' },
+  { rank:6, name:'Cutt.ly', logo:'C', desc:'URL 단축 및 링크 관리 플랫폼', score:'84,827', pct:95, flag:'🇮🇳', country:'인도', cRank:'#1', change:'+3', cat:'SaaS' },
+  { rank:7, name:'Surfshark', logo:'S', desc:'VPN 및 디지털 보안 서비스', score:'84,748', pct:95, flag:'🇻🇬', country:'영국령 버진아일랜드', cRank:'#1', change:'-2', cat:'보안' },
+  { rank:8, name:'Remove.bg', logo:'R', desc:'AI 기반 이미지 배경 제거 도구', score:'84,581', pct:95, flag:'🇦🇹', country:'오스트리아', cRank:'#1', change:'+1', cat:'AI' },
+  { rank:9, name:'Payhip', logo:'P', desc:'디지털 상품 판매 플랫폼', score:'84,566', pct:95, flag:'🇬🇧', country:'영국', cRank:'#3', change:'-1', cat:'SaaS' },
+  { rank:10, name:'ilovepdf.com', logo:'I', desc:'온라인 PDF 편집 및 변환 도구', score:'84,489', pct:95, flag:'🇪🇸', country:'스페인', cRank:'#1', change:'+0', cat:'SaaS' },
+  { rank:11, name:'Grammarly', logo:'G', desc:'AI 기반 글쓰기 어시스턴트', score:'84,210', pct:94, flag:'🇺🇸', country:'미국', cRank:'#2', change:'+2', cat:'AI' },
+  { rank:12, name:'Canva', logo:'C', desc:'온라인 디자인 및 퍼블리싱 플랫폼', score:'83,980', pct:94, flag:'🇦🇺', country:'호주', cRank:'#1', change:'-1', cat:'디자인' },
+  { rank:13, name:'Notion', logo:'N', desc:'올인원 워크스페이스 플랫폼', score:'83,740', pct:94, flag:'🇺🇸', country:'미국', cRank:'#3', change:'+0', cat:'생산성' },
+  { rank:14, name:'Figma', logo:'F', desc:'협업 인터페이스 디자인 도구', score:'83,510', pct:93, flag:'🇺🇸', country:'미국', cRank:'#4', change:'+1', cat:'디자인' },
+  { rank:15, name:'Stripe', logo:'S', desc:'온라인 결제 인프라 플랫폼', score:'83,290', pct:93, flag:'🇺🇸', country:'미국', cRank:'#5', change:'+0', cat:'핀테크' },
+  { rank:16, name:'Wise', logo:'W', desc:'국제 송금 및 다중 화폐 서비스', score:'83,100', pct:93, flag:'🇬🇧', country:'영국', cRank:'#4', change:'+3', cat:'핀테크' },
+  { rank:17, name:'Discord', logo:'D', desc:'커뮤니티를 위한 커뮤니케이션 플랫폼', score:'82,870', pct:93, flag:'🇺🇸', country:'미국', cRank:'#6', change:'-2', cat:'SaaS' },
+  { rank:18, name:'Vercel', logo:'V', desc:'프론트엔드 클라우드 플랫폼', score:'82,650', pct:93, flag:'🇺🇸', country:'미국', cRank:'#7', change:'+1', cat:'클라우드' },
+  { rank:19, name:'Linear', logo:'L', desc:'소프트웨어 프로젝트 관리 도구', score:'82,430', pct:92, flag:'🇺🇸', country:'미국', cRank:'#8', change:'+5', cat:'SaaS' },
+  { rank:20, name:'Midjourney', logo:'M', desc:'AI 이미지 생성 플랫폼', score:'82,210', pct:92, flag:'🇺🇸', country:'미국', cRank:'#9', change:'-2', cat:'AI' },
+  { rank:21, name:'Deel', logo:'D', desc:'글로벌 HR 및 급여 관리 플랫폼', score:'81,990', pct:92, flag:'🇺🇸', country:'미국', cRank:'#10', change:'+0', cat:'SaaS' },
+  { rank:22, name:'Ramp', logo:'R', desc:'기업 지출 관리 플랫폼', score:'82,083', pct:92, flag:'🇺🇸', country:'미국', cRank:'#11', change:'+16', isNew:true, cat:'핀테크' },
+  { rank:23, name:'Supabase', logo:'S', desc:'오픈소스 Firebase 대안', score:'81,770', pct:92, flag:'🇺🇸', country:'미국', cRank:'#12', change:'+3', cat:'클라우드' },
+  { rank:24, name:'Bolt', logo:'B', desc:'초고속 모빌리티 서비스', score:'81,550', pct:91, flag:'🇪🇪', country:'에스토니아', cRank:'#1', change:'+0', cat:'SaaS' },
+  { rank:25, name:'Framer', logo:'F', desc:'노코드 웹사이트 빌더', score:'81,330', pct:91, flag:'🇳🇱', country:'네덜란드', cRank:'#1', change:'+2', cat:'디자인' },
+  { rank:26, name:'Cursor', logo:'C', desc:'AI 코드 에디터', score:'81,110', pct:91, flag:'🇺🇸', country:'미국', cRank:'#13', change:'+12', isNew:true, cat:'AI' },
+  { rank:27, name:'Perplexity', logo:'P', desc:'AI 검색 엔진', score:'80,890', pct:91, flag:'🇺🇸', country:'미국', cRank:'#14', change:'+8', isNew:true, cat:'AI' },
+  { rank:28, name:'Retool', logo:'R', desc:'내부 도구 빌더 플랫폼', score:'80,670', pct:90, flag:'🇺🇸', country:'미국', cRank:'#15', change:'-3', cat:'SaaS' },
+  { rank:29, name:'Airtable', logo:'A', desc:'클라우드 기반 협업 데이터베이스', score:'80,450', pct:90, flag:'🇺🇸', country:'미국', cRank:'#16', change:'-1', cat:'생산성' },
+  { rank:30, name:'Lemon Squeezy', logo:'L', desc:'디지털 상품 판매 인프라', score:'80,230', pct:90, flag:'🇺🇸', country:'미국', cRank:'#17', change:'+4', cat:'SaaS' },
+  { rank:31, name:'Render', logo:'R', desc:'클라우드 호스팅 플랫폼', score:'80,010', pct:90, flag:'🇺🇸', country:'미국', cRank:'#18', change:'-4', cat:'클라우드' },
+  { rank:32, name:'Railway', logo:'R', desc:'인프라 배포 플랫폼', score:'79,790', pct:89, flag:'🇺🇸', country:'미국', cRank:'#19', change:'+6', isNew:true, cat:'클라우드' },
+  { rank:33, name:'Dub', logo:'D', desc:'오픈소스 링크 관리 플랫폼', score:'79,570', pct:89, flag:'🇺🇸', country:'미국', cRank:'#20', change:'+10', isNew:true, cat:'SaaS' },
+  { rank:34, name:'N26', logo:'N', desc:'모바일 뱅킹 서비스', score:'79,350', pct:89, flag:'🇩🇪', country:'독일', cRank:'#1', change:'+0', cat:'핀테크' },
+  { rank:35, name:'Wiz', logo:'W', desc:'클라우드 보안 플랫폼', score:'79,130', pct:89, flag:'🇮🇱', country:'이스라엘', cRank:'#1', change:'+5', cat:'보안' },
+  { rank:36, name:'Mistral AI', logo:'M', desc:'유럽 대표 AI 모델 기업', score:'78,910', pct:88, flag:'🇫🇷', country:'프랑스', cRank:'#1', change:'+9', isNew:true, cat:'AI' },
+  { rank:37, name:'Grab', logo:'G', desc:'동남아 슈퍼앱', score:'78,690', pct:88, flag:'🇸🇬', country:'싱가포르', cRank:'#1', change:'-2', cat:'SaaS' },
+  { rank:38, name:'Klarna', logo:'K', desc:'BNPL 결제 서비스', score:'78,470', pct:88, flag:'🇸🇪', country:'스웨덴', cRank:'#1', change:'+1', cat:'핀테크' },
+  { rank:39, name:'Nubank', logo:'N', desc:'디지털 뱅킹 플랫폼', score:'78,250', pct:88, flag:'🇧🇷', country:'브라질', cRank:'#1', change:'+0', cat:'핀테크' },
+  { rank:40, name:'Datadog', logo:'D', desc:'클라우드 모니터링 및 분석 플랫폼', score:'78,030', pct:87, flag:'🇺🇸', country:'미국', cRank:'#21', change:'-3', cat:'클라우드' },
+  { rank:41, name:'Toss', logo:'T', desc:'모바일 금융 슈퍼앱', score:'77,890', pct:87, flag:'🇰🇷', country:'한국', cRank:'#1', change:'+2', cat:'핀테크' },
+  { rank:42, name:'Miro', logo:'M', desc:'온라인 협업 화이트보드', score:'77,670', pct:87, flag:'🇳🇱', country:'네덜란드', cRank:'#2', change:'+0', cat:'생산성' },
+  { rank:43, name:'Loom', logo:'L', desc:'비동기 비디오 커뮤니케이션', score:'77,450', pct:87, flag:'🇺🇸', country:'미국', cRank:'#22', change:'-1', cat:'SaaS' },
+  { rank:44, name:'Anthropic', logo:'A', desc:'AI 안전 연구 기업', score:'77,230', pct:86, flag:'🇺🇸', country:'미국', cRank:'#23', change:'+7', isNew:true, cat:'AI' },
+  { rank:45, name:'Coupang', logo:'C', desc:'한국 대표 이커머스 플랫폼', score:'76,540', pct:86, flag:'🇰🇷', country:'한국', cRank:'#2', change:'+1', cat:'SaaS' },
+  { rank:46, name:'Plaid', logo:'P', desc:'금융 데이터 연결 API', score:'76,320', pct:86, flag:'🇺🇸', country:'미국', cRank:'#24', change:'+0', cat:'핀테크' },
+  { rank:47, name:'Scale AI', logo:'S', desc:'AI 학습 데이터 플랫폼', score:'76,100', pct:85, flag:'🇺🇸', country:'미국', cRank:'#25', change:'+4', cat:'AI' },
+  { rank:48, name:'Viva Republica', logo:'V', desc:'토스 운영사, 핀테크 유니콘', score:'75,320', pct:85, flag:'🇰🇷', country:'한국', cRank:'#3', change:'-1', cat:'핀테크' },
+  { rank:49, name:'Celonis', logo:'C', desc:'프로세스 마이닝 및 자동화', score:'75,100', pct:84, flag:'🇩🇪', country:'독일', cRank:'#2', change:'+0', cat:'SaaS' },
+  { rank:50, name:'당근마켓', logo:'당', desc:'지역 기반 중고거래 플랫폼', score:'74,800', pct:84, flag:'🇰🇷', country:'한국', cRank:'#4', change:'+2', cat:'SaaS' },
+];
+
+const koreaRankings = [
+  { rank:1, name:'Toss', logo:'T', desc:'모바일 금융 슈퍼앱', score:'77,890', pct:100, flag:'🇰🇷', country:'한국', cRank:'#41', change:'+0', cat:'핀테크' },
+  { rank:2, name:'Coupang', logo:'C', desc:'한국 대표 이커머스 플랫폼', score:'76,540', pct:98, flag:'🇰🇷', country:'한국', cRank:'#45', change:'+1', cat:'SaaS' },
+  { rank:3, name:'Viva Republica', logo:'V', desc:'토스 운영사, 핀테크 유니콘', score:'75,320', pct:96, flag:'🇰🇷', country:'한국', cRank:'#48', change:'-1', cat:'핀테크' },
+  { rank:4, name:'당근마켓', logo:'당', desc:'지역 기반 중고거래 플랫폼', score:'74,800', pct:96, flag:'🇰🇷', country:'한국', cRank:'#50', change:'+2', cat:'SaaS' },
+  { rank:5, name:'야놀자', logo:'야', desc:'여행 및 여가 플랫폼', score:'73,210', pct:94, flag:'🇰🇷', country:'한국', cRank:'#58', change:'+0', cat:'SaaS' },
+  { rank:6, name:'두나무', logo:'두', desc:'업비트 운영사, 블록체인 기업', score:'72,900', pct:93, flag:'🇰🇷', country:'한국', cRank:'#61', change:'-2', cat:'핀테크' },
+  { rank:7, name:'무신사', logo:'무', desc:'패션 이커머스 플랫폼', score:'72,100', pct:92, flag:'🇰🇷', country:'한국', cRank:'#67', change:'+1', cat:'SaaS' },
+  { rank:8, name:'Sendbird', logo:'S', desc:'인앱 채팅 & 메시징 API', score:'71,650', pct:92, flag:'🇰🇷', country:'한국', cRank:'#72', change:'+3', cat:'SaaS' },
+  { rank:9, name:'Lunit', logo:'L', desc:'AI 기반 의료 영상 분석', score:'71,200', pct:91, flag:'🇰🇷', country:'한국', cRank:'#76', change:'+5', isNew:true, cat:'AI' },
+  { rank:10, name:'Rebellions', logo:'R', desc:'AI 반도체 설계 스타트업', score:'70,800', pct:90, flag:'🇰🇷', country:'한국', cRank:'#80', change:'+8', isNew:true, cat:'AI' },
+  { rank:11, name:'컬리', logo:'컬', desc:'새벽배송 식품 이커머스', score:'70,350', pct:90, flag:'🇰🇷', country:'한국', cRank:'#85', change:'+0', cat:'SaaS' },
+  { rank:12, name:'직방', logo:'직', desc:'부동산 정보 플랫폼', score:'69,800', pct:89, flag:'🇰🇷', country:'한국', cRank:'#90', change:'-3', cat:'SaaS' },
+  { rank:13, name:'버킷플레이스', logo:'버', desc:'오늘의집 운영사, 인테리어 플랫폼', score:'69,250', pct:88, flag:'🇰🇷', country:'한국', cRank:'#95', change:'+1', cat:'SaaS' },
+  { rank:14, name:'크래프톤', logo:'크', desc:'배틀그라운드 개발사', score:'68,700', pct:88, flag:'🇰🇷', country:'한국', cRank:'#101', change:'+0', cat:'SaaS' },
+  { rank:15, name:'토스페이먼츠', logo:'T', desc:'통합 결제 서비스', score:'68,150', pct:87, flag:'🇰🇷', country:'한국', cRank:'#108', change:'+4', cat:'핀테크' },
+  { rank:16, name:'리디', logo:'리', desc:'전자책 및 웹툰 플랫폼', score:'67,600', pct:86, flag:'🇰🇷', country:'한국', cRank:'#115', change:'-1', cat:'SaaS' },
+  { rank:17, name:'스패로우', logo:'스', desc:'스타벅스코리아 운영사', score:'67,050', pct:86, flag:'🇰🇷', country:'한국', cRank:'#122', change:'+2', cat:'SaaS' },
+  { rank:18, name:'FitPet', logo:'F', desc:'반려동물 헬스케어 플랫폼', score:'66,500', pct:85, flag:'🇰🇷', country:'한국', cRank:'#130', change:'+6', isNew:true, cat:'SaaS' },
+  { rank:19, name:'채널톡', logo:'채', desc:'올인원 고객 메신저 솔루션', score:'65,950', pct:84, flag:'🇰🇷', country:'한국', cRank:'#138', change:'+3', cat:'SaaS' },
+  { rank:20, name:'Upstage', logo:'U', desc:'기업용 AI 솔루션', score:'65,400', pct:83, flag:'🇰🇷', country:'한국', cRank:'#146', change:'+10', isNew:true, cat:'AI' },
+];
+
+let currentTab = 'global';
+
+function renderTable(data) {
+  const tbody = document.getElementById('rankBody');
+  const isKorea = currentTab === 'korea';
+  tbody.innerHTML = data.map((s, i) => {
+    const displayRank = isKorea ? s.rank : s.rank;
+    const rankClass = displayRank <= 3 ? ' rank-' + displayRank : '';
+    const changeVal = parseInt(s.change);
+    let changeHtml;
+    if (s.isNew) {
+      changeHtml = '<span class="change-up">NEW</span>';
+    } else if (changeVal > 0) {
+      changeHtml = '<span class="change-up">&#9650; ' + s.change + '</span>';
+    } else if (changeVal < 0) {
+      changeHtml = '<span class="change-down">&#9660; ' + s.change + '</span>';
+    } else {
+      changeHtml = '<span class="change-same">&#8212;</span>';
+    }
+    const newTag = s.isNew ? '<span class="new-tag">NEW</span>' : '';
+    const globalCol = isKorea ? '<td class="country-rank">' + s.cRank + '</td>' : '';
+    return '<tr>' +
+      '<td class="rank-num' + rankClass + '">' + displayRank + '</td>' +
+      '<td><div class="startup-info"><div class="startup-logo">' + s.logo + '</div><div><div class="startup-name">' + s.name + newTag + '</div><div class="startup-desc">' + s.desc + '</div></div></div></td>' +
+      '<td><div class="sr-score">' + s.score + '</div><div class="sr-score-bar"><div class="sr-score-fill" style="width:' + s.pct + '%"></div></div></td>' +
+      (isKorea ? '' : '<td><span class="country-badge"><span class="country-flag">' + s.flag + '</span> ' + s.country + '</span></td>') +
+      '<td class="country-rank">' + (isKorea ? s.cRank : s.cRank) + '</td>' +
+      '<td>' + changeHtml + '</td></tr>';
+  }).join('');
+
+  // Update table header
+  const thead = document.querySelector('.rank-table thead tr');
+  if (isKorea) {
+    thead.innerHTML = '<th>순위</th><th>스타트업</th><th>SR Score</th><th>글로벌 순위</th><th>변동</th>';
+  } else {
+    thead.innerHTML = '<th>순위</th><th>스타트업</th><th>SR Score</th><th>국가</th><th>국가 순위</th><th>변동</th>';
+  }
+}
+
+function switchTab(tab) {
+  currentTab = tab;
+  document.querySelectorAll('.ranking-tab').forEach(t => t.classList.remove('active'));
+  event.target.classList.add('active');
+
+  const filterRow = document.querySelector('.filter-row');
+  const countryFilter = document.getElementById('countryFilter');
+  const catFilter = document.getElementById('categoryFilter');
+
+  if (tab === 'korea') {
+    countryFilter.style.display = 'none';
+    document.getElementById('pageTitle').textContent = '한국 스타트업 랭킹 TOP 20';
+    document.getElementById('pageSubtitle').textContent = 'SR Score 기반 대한민국 스타트업 순위 - startupranking.com 데이터 기반';
+  } else {
+    countryFilter.style.display = '';
+    document.getElementById('pageTitle').textContent = '글로벌 스타트업 랭킹 TOP 50';
+    document.getElementById('pageSubtitle').textContent = 'SR Score 기반 전 세계 스타트업 순위 - startupranking.com 데이터 기반';
+  }
+
+  // Reset filters
+  document.getElementById('searchInput').value = '';
+  if (countryFilter) countryFilter.value = '';
+  if (catFilter) catFilter.value = '';
+
+  filterTable();
+}
+
+function filterTable() {
+  const search = document.getElementById('searchInput').value.toLowerCase();
+  const country = document.getElementById('countryFilter').value;
+  const cat = document.getElementById('categoryFilter').value;
+  const source = currentTab === 'korea' ? koreaRankings : globalRankings;
+  const filtered = source.filter(s => {
+    if (search && !s.name.toLowerCase().includes(search) && !s.desc.includes(search)) return false;
+    if (currentTab === 'global' && country && s.country !== country) return false;
+    if (cat && s.cat !== cat) return false;
+    return true;
+  });
+  renderTable(filtered);
+}
+
+// Check URL hash for initial tab
+if (window.location.hash === '#korea') {
+  document.querySelector('.ranking-tab:last-child').click();
+} else {
+  renderTable(globalRankings);
+}
+</script>
+
+</body>
+</html>
