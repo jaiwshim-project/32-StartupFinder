@@ -1,0 +1,314 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>스타트업 등록 - StartupFinder</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif; color: #333; background: #f5f7fa; }
+header { background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.08); position: sticky; top: 0; z-index: 100; }
+.header-inner { max-width: 1200px; margin: 0 auto; padding: 0 20px; display: flex; align-items: center; justify-content: space-between; height: 64px; }
+.logo { font-size: 22px; font-weight: 700; color: #499cd7; text-decoration: none; }
+.logo span { color: #333; }
+nav a { text-decoration: none; color: #555; margin-left: 28px; font-size: 15px; font-weight: 500; transition: color .2s; }
+nav a:hover, nav a.active { color: #499cd7; }
+.page-hero { background: linear-gradient(135deg, #499cd7 0%, #2c6faa 100%); color: #fff; text-align: center; padding: 50px 20px 40px; }
+.page-hero h1 { font-size: 32px; margin-bottom: 10px; }
+.page-hero p { opacity: .9; font-size: 16px; }
+.create-container { max-width: 700px; margin: 40px auto; padding: 0 20px; }
+
+/* Steps */
+.steps { display: flex; justify-content: center; gap: 0; margin-bottom: 40px; }
+.step { display: flex; align-items: center; gap: 8px; }
+.step-num { width: 36px; height: 36px; border-radius: 50%; background: #e0e0e0; color: #999; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; }
+.step.active .step-num { background: #499cd7; color: #fff; }
+.step.done .step-num { background: #4caf50; color: #fff; }
+.step-label { font-size: 14px; color: #999; }
+.step.active .step-label { color: #333; font-weight: 600; }
+.step.done .step-label { color: #4caf50; }
+.step-line { width: 60px; height: 2px; background: #e0e0e0; margin: 0 8px; align-self: center; }
+.step-line.done { background: #4caf50; }
+
+/* Form */
+.form-card { background: #fff; border-radius: 12px; padding: 40px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+.form-card h2 { font-size: 22px; margin-bottom: 8px; }
+.form-card .form-desc { color: #777; font-size: 14px; margin-bottom: 28px; line-height: 1.6; }
+.form-group { margin-bottom: 24px; }
+.form-group label { display: block; font-size: 14px; font-weight: 600; color: #333; margin-bottom: 8px; }
+.form-group label .req { color: #f44336; }
+.form-group input, .form-group select, .form-group textarea { width: 100%; padding: 12px 16px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 15px; color: #333; outline: none; transition: border .2s; font-family: inherit; }
+.form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: #499cd7; }
+.form-group .hint { font-size: 12px; color: #999; margin-top: 6px; }
+.form-group textarea { height: 100px; resize: vertical; }
+.url-validate { display: flex; gap: 10px; }
+.url-validate input { flex: 1; }
+.btn { display: inline-block; padding: 12px 32px; background: #499cd7; color: #fff; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 15px; transition: background .2s; border: none; cursor: pointer; }
+.btn:hover { background: #3a85bb; }
+.btn-sm { padding: 12px 20px; font-size: 14px; }
+.btn-outline { background: transparent; border: 2px solid #499cd7; color: #499cd7; }
+.btn-outline:hover { background: #499cd7; color: #fff; }
+
+/* Validation result */
+.val-result { margin-top: 16px; padding: 16px; border-radius: 8px; display: none; }
+.val-result.show { display: block; }
+.val-success { background: #e8f5e9; border: 1px solid #c8e6c9; color: #2e7d32; }
+.val-error { background: #fce4ec; border: 1px solid #f8bbd0; color: #c62828; }
+.val-result h4 { font-size: 14px; margin-bottom: 6px; }
+.val-result p { font-size: 13px; line-height: 1.5; }
+.val-checks { list-style: none; margin-top: 8px; }
+.val-checks li { padding: 4px 0; font-size: 13px; }
+.val-checks li::before { content: '✓ '; color: #4caf50; font-weight: 700; }
+.val-checks li.fail::before { content: '✗ '; color: #f44336; }
+
+/* Info box */
+.info-box { background: #e3f2fd; border-radius: 8px; padding: 16px 20px; margin-bottom: 24px; }
+.info-box h4 { font-size: 14px; color: #1565c0; margin-bottom: 6px; }
+.info-box p { font-size: 13px; color: #555; line-height: 1.5; }
+
+.form-actions { display: flex; justify-content: space-between; margin-top: 32px; }
+
+footer { background: #1a2332; color: #aab; padding: 40px 20px; text-align: center; margin-top: 50px; }
+footer .links a { color: #8899aa; text-decoration: none; margin: 0 12px; font-size: 14px; }
+footer .copy { font-size: 13px; color: #556; margin-top: 16px; }
+@media (max-width: 768px) { nav { display: none; } .form-card { padding: 24px; } .steps { flex-wrap: wrap; gap: 8px; } .step-line { display: none; } }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <a href="index.html" class="logo">Startup<span>Finder</span></a>
+        <nav>
+      <a href="about.html">소개</a>
+      <a href="how-it-works.html">작동 원리</a>
+      <a href="index.html#ranking">랭킹</a>
+      <a href="countries.html">국가별</a>
+      <a href="index.html#directories">디렉토리</a>
+      <a href="faster-approval.html">빠른 승인</a>
+      <a href="booster.html">부스터</a>
+      <a href="premium-profile.html">프리미엄</a>
+      <a href="advertising.html">광고</a>
+      <a href="blog.html">블로그</a>
+      <a href="create.html">스타트업 등록</a>
+    </nav>
+  </div>
+</header>
+
+<div class="page-hero">
+  <h1>스타트업 등록</h1>
+  <p>스타트업을 등록하고 전 세계 랭킹에 참여하세요.</p>
+</div>
+
+<div class="create-container">
+
+  <div class="steps">
+    <div class="step active">
+      <div class="step-num">1</div>
+      <div class="step-label">URL 검증</div>
+    </div>
+    <div class="step-line"></div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-label">기본 정보</div>
+    </div>
+    <div class="step-line"></div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-label">상세 정보</div>
+    </div>
+    <div class="step-line"></div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-label">검토 제출</div>
+    </div>
+  </div>
+
+  <!-- Step 1: URL Validation -->
+  <div class="form-card" id="step1">
+    <h2>1단계: URL 검증</h2>
+    <p class="form-desc">스타트업의 웹사이트 URL을 입력하세요. URL의 유효성과 접근 가능 여부를 검증합니다.</p>
+
+    <div class="info-box">
+      <h4>URL 검증 기준</h4>
+      <p>유효한 HTTPS 프로토콜 사용, 웹사이트 접근 가능 여부, 중복 등록 여부, 도메인 신뢰도를 확인합니다.</p>
+    </div>
+
+    <div class="form-group">
+      <label>웹사이트 URL <span class="req">*</span></label>
+      <div class="url-validate">
+        <input type="url" placeholder="https://yourstartup.com" id="urlInput">
+        <button class="btn btn-sm" onclick="validateUrl()">검증하기</button>
+      </div>
+      <div class="hint">스타트업의 공식 웹사이트 주소를 입력하세요 (https:// 포함)</div>
+    </div>
+
+    <div class="val-result" id="valResult">
+      <h4>검증 결과</h4>
+      <ul class="val-checks">
+        <li>HTTPS 프로토콜 사용</li>
+        <li>웹사이트 접근 가능</li>
+        <li>중복 등록 아님</li>
+        <li>도메인 등록 확인</li>
+        <li>스팸 사이트 아님</li>
+      </ul>
+    </div>
+
+    <div class="form-actions">
+      <div></div>
+      <button class="btn" onclick="goStep(2)">다음 단계 &rarr;</button>
+    </div>
+  </div>
+
+  <!-- Step 2: Basic Info -->
+  <div class="form-card" id="step2" style="display:none;">
+    <h2>2단계: 기본 정보</h2>
+    <p class="form-desc">스타트업의 기본 정보를 입력하세요.</p>
+
+    <div class="form-group">
+      <label>스타트업 이름 <span class="req">*</span></label>
+      <input type="text" placeholder="예: StartupFinder">
+    </div>
+    <div class="form-group">
+      <label>한 줄 소개 <span class="req">*</span></label>
+      <input type="text" placeholder="스타트업을 한 문장으로 설명하세요" maxlength="80">
+      <div class="hint">최대 80자</div>
+    </div>
+    <div class="form-group">
+      <label>카테고리 <span class="req">*</span></label>
+      <select>
+        <option value="">카테고리 선택</option>
+        <option>AI / 머신러닝</option>
+        <option>SaaS</option>
+        <option>핀테크</option>
+        <option>이커머스</option>
+        <option>헬스케어</option>
+        <option>에듀테크</option>
+        <option>디자인 도구</option>
+        <option>개발자 도구</option>
+        <option>마켓플레이스</option>
+        <option>소셜 미디어</option>
+        <option>기타</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>국가 <span class="req">*</span></label>
+      <select>
+        <option value="">국가 선택</option>
+        <option>대한민국</option>
+        <option>미국</option>
+        <option>영국</option>
+        <option>독일</option>
+        <option>일본</option>
+        <option>호주</option>
+        <option>캐나다</option>
+        <option>인도</option>
+        <option>프랑스</option>
+        <option>기타</option>
+      </select>
+    </div>
+
+    <div class="form-actions">
+      <button class="btn btn-outline" onclick="goStep(1)">&larr; 이전</button>
+      <button class="btn" onclick="goStep(3)">다음 단계 &rarr;</button>
+    </div>
+  </div>
+
+  <!-- Step 3: Details -->
+  <div class="form-card" id="step3" style="display:none;">
+    <h2>3단계: 상세 정보</h2>
+    <p class="form-desc">스타트업에 대한 더 자세한 정보를 입력하세요.</p>
+
+    <div class="form-group">
+      <label>상세 설명 <span class="req">*</span></label>
+      <textarea placeholder="스타트업이 어떤 문제를 해결하고, 어떤 가치를 제공하는지 설명하세요."></textarea>
+    </div>
+    <div class="form-group">
+      <label>설립 연도</label>
+      <input type="number" placeholder="2024" min="1990" max="2026">
+    </div>
+    <div class="form-group">
+      <label>소셜 미디어 (선택)</label>
+      <input type="url" placeholder="Twitter / X URL" style="margin-bottom:8px;">
+      <input type="url" placeholder="LinkedIn URL" style="margin-bottom:8px;">
+      <input type="url" placeholder="GitHub URL">
+    </div>
+    <div class="form-group">
+      <label>로고 URL (선택)</label>
+      <input type="url" placeholder="https://yourstartup.com/logo.png">
+      <div class="hint">정사각형 이미지 권장 (최소 200x200px)</div>
+    </div>
+
+    <div class="form-actions">
+      <button class="btn btn-outline" onclick="goStep(2)">&larr; 이전</button>
+      <button class="btn" onclick="goStep(4)">다음 단계 &rarr;</button>
+    </div>
+  </div>
+
+  <!-- Step 4: Review -->
+  <div class="form-card" id="step4" style="display:none;">
+    <h2>4단계: 검토 및 제출</h2>
+    <p class="form-desc">입력한 정보를 검토하고 제출하세요. 제출 후 검토를 거쳐 승인됩니다.</p>
+
+    <div class="info-box">
+      <h4>승인 절차 안내</h4>
+      <p>제출된 스타트업은 검토 후 1~7일 내에 승인됩니다. SF Faster Approval 서비스를 이용하면 우선 검토를 받을 수 있습니다.</p>
+    </div>
+
+    <div style="background:#f9f9f9; border-radius:8px; padding:20px; margin-bottom:24px;">
+      <div style="display:grid; grid-template-columns:120px 1fr; gap:10px; font-size:14px;">
+        <div style="color:#999;">웹사이트</div><div>https://yourstartup.com</div>
+        <div style="color:#999;">이름</div><div>-</div>
+        <div style="color:#999;">카테고리</div><div>-</div>
+        <div style="color:#999;">국가</div><div>-</div>
+        <div style="color:#999;">설명</div><div style="color:#aaa;">입력 정보가 여기에 표시됩니다</div>
+      </div>
+    </div>
+
+    <div style="margin-bottom:24px;">
+      <label style="display:flex; align-items:start; gap:8px; font-size:14px; cursor:pointer;">
+        <input type="checkbox" style="margin-top:2px;">
+        <span>이용약관과 개인정보처리방침에 동의합니다.</span>
+      </label>
+    </div>
+
+    <div class="form-actions">
+      <button class="btn btn-outline" onclick="goStep(3)">&larr; 이전</button>
+      <button class="btn" style="background:#4caf50;">제출하기</button>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <div class="links">
+    <a href="index.html">홈</a>
+    <a href="#">이용약관</a>
+    <a href="#">개인정보처리방침</a>
+    <a href="#">FAQ</a>
+  </div>
+  <p class="copy">&copy; 2026 StartupFinder. All rights reserved.</p>
+  <div style="margin-top:20px;"><a href="admin.html" style="display:inline-block; padding:8px 20px; background:#e53935; color:#fff; font-size:13px; font-weight:600; text-decoration:none; border-radius:6px; transition:background .2s;" onmouseover="this.style.background='#c62828'" onmouseout="this.style.background='#e53935'">🔒 관리자 대시보드</a></div>
+</footer>
+
+<script>
+function validateUrl() {
+  const r = document.getElementById('valResult');
+  r.className = 'val-result show val-success';
+  r.style.display = 'block';
+}
+function goStep(n) {
+  for (let i = 1; i <= 4; i++) document.getElementById('step' + i).style.display = i === n ? 'block' : 'none';
+  document.querySelectorAll('.step').forEach((s, idx) => {
+    s.className = 'step' + (idx + 1 < n ? ' done' : idx + 1 === n ? ' active' : '');
+  });
+  document.querySelectorAll('.step-line').forEach((l, idx) => {
+    l.className = 'step-line' + (idx + 1 < n ? ' done' : '');
+  });
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+
+</body>
+</html>
+

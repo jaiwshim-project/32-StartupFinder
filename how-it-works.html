@@ -1,0 +1,339 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>작동 원리 - StartupFinder</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif; color: #333; background: #f5f7fa; }
+header { background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.08); position: sticky; top: 0; z-index: 100; }
+.header-inner { max-width: 1200px; margin: 0 auto; padding: 0 20px; display: flex; align-items: center; justify-content: space-between; height: 64px; }
+.logo { font-size: 22px; font-weight: 700; color: #499cd7; text-decoration: none; }
+.logo span { color: #333; }
+nav a { text-decoration: none; color: #555; margin-left: 28px; font-size: 15px; font-weight: 500; transition: color .2s; }
+nav a:hover, nav a.active { color: #499cd7; }
+.page-hero { background: linear-gradient(135deg, #499cd7 0%, #2c6faa 100%); color: #fff; text-align: center; padding: 80px 20px 70px; }
+.page-hero h1 { font-size: 40px; margin-bottom: 16px; }
+.page-hero p { opacity: .85; font-size: 18px; max-width: 660px; margin: 0 auto; line-height: 1.8; }
+.container { max-width: 1000px; margin: 0 auto; padding: 60px 20px; }
+.btn { display: inline-block; padding: 14px 36px; background: #499cd7; color: #fff; border-radius: 8px; text-decoration: none; font-weight: 700; font-size: 16px; transition: background .2s; }
+.btn:hover { background: #3a85bb; }
+
+/* Section titles */
+.section-title { font-size: 28px; text-align: center; margin-bottom: 12px; color: #1a2332; }
+.section-sub { text-align: center; color: #777; font-size: 16px; margin-bottom: 48px; max-width: 600px; margin-left: auto; margin-right: auto; line-height: 1.7; }
+
+/* Score Overview */
+.score-overview { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-bottom: 80px; }
+.score-card { background: #fff; border-radius: 16px; padding: 40px 28px; text-align: center; box-shadow: 0 4px 20px rgba(0,0,0,0.06); position: relative; overflow: hidden; }
+.score-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; }
+.score-card.sc-score::before { background: linear-gradient(90deg, #499cd7, #2c6faa); }
+.score-card.sc-web::before { background: linear-gradient(90deg, #4caf50, #2e7d32); }
+.score-card.sc-social::before { background: linear-gradient(90deg, #e91e63, #ad1457); }
+.score-card .sc-icon { font-size: 48px; margin-bottom: 16px; }
+.score-card h3 { font-size: 22px; margin-bottom: 8px; }
+.score-card .sc-range { font-size: 14px; color: #499cd7; font-weight: 700; margin-bottom: 12px; }
+.score-card p { font-size: 14px; color: #777; line-height: 1.7; }
+
+/* Score Formula */
+.formula-box { background: #1a2332; border-radius: 16px; padding: 48px; text-align: center; margin-bottom: 80px; color: #fff; }
+.formula-box h3 { font-size: 20px; margin-bottom: 24px; opacity: .8; }
+.formula { font-size: 32px; font-weight: 800; letter-spacing: 2px; margin-bottom: 24px; }
+.formula .sr { color: #499cd7; }
+.formula .web { color: #4caf50; }
+.formula .social { color: #e91e63; }
+.formula-note { font-size: 14px; color: #8899aa; max-width: 600px; margin: 0 auto; line-height: 1.7; }
+
+/* Detail sections */
+.detail-section { margin-bottom: 80px; }
+.detail-section h2 { font-size: 24px; margin-bottom: 24px; display: flex; align-items: center; gap: 12px; }
+.detail-section h2 .tag { display: inline-block; padding: 4px 14px; border-radius: 20px; font-size: 13px; font-weight: 600; }
+.tag-web { background: #e8f5e9; color: #2e7d32; }
+.tag-social { background: #fce4ec; color: #c62828; }
+
+.factor-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+.factor-card { background: #fff; border-radius: 12px; padding: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); display: flex; gap: 14px; align-items: start; }
+.factor-icon { width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+.factor-card h4 { font-size: 15px; margin-bottom: 4px; }
+.factor-card p { font-size: 13px; color: #777; line-height: 1.6; }
+
+/* Logarithmic scale */
+.log-box { background: #fff; border-radius: 16px; padding: 40px; box-shadow: 0 4px 20px rgba(0,0,0,0.06); margin-bottom: 80px; }
+.log-box h2 { font-size: 24px; margin-bottom: 16px; }
+.log-box > p { font-size: 15px; color: #666; line-height: 1.8; margin-bottom: 24px; }
+.log-visual { display: flex; align-items: flex-end; gap: 4px; height: 160px; padding: 0 20px; margin-bottom: 16px; }
+.log-bar { flex: 1; background: linear-gradient(180deg, #499cd7, #2c6faa); border-radius: 4px 4px 0 0; position: relative; transition: height .3s; }
+.log-bar .bar-label { position: absolute; bottom: -24px; left: 50%; transform: translateX(-50%); font-size: 10px; color: #999; white-space: nowrap; }
+.log-bar .bar-val { position: absolute; top: -20px; left: 50%; transform: translateX(-50%); font-size: 10px; font-weight: 700; color: #333; }
+.log-comparison { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 32px; }
+.log-comp { padding: 16px 20px; border-radius: 10px; }
+.log-comp.easy { background: #e8f5e9; }
+.log-comp.hard { background: #fce4ec; }
+.log-comp h4 { font-size: 14px; margin-bottom: 4px; }
+.log-comp p { font-size: 13px; color: #555; }
+
+/* Ranking types */
+.rank-types { margin-bottom: 80px; }
+.rank-types h2 { font-size: 24px; text-align: center; margin-bottom: 32px; }
+.rank-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+.rank-type-card { background: #fff; border-radius: 16px; padding: 32px; text-align: center; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+.rank-type-card .rt-icon { font-size: 40px; margin-bottom: 12px; }
+.rank-type-card h3 { font-size: 17px; margin-bottom: 8px; }
+.rank-type-card p { font-size: 13px; color: #777; line-height: 1.6; }
+
+/* Steps */
+.steps-section { margin-bottom: 80px; }
+.steps-section h2 { font-size: 24px; text-align: center; margin-bottom: 40px; }
+.steps-flow { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+.step-box { background: #fff; border-radius: 16px; padding: 28px 20px; text-align: center; box-shadow: 0 2px 12px rgba(0,0,0,0.06); position: relative; }
+.step-box::after { content: '→'; position: absolute; right: -16px; top: 50%; transform: translateY(-50%); font-size: 20px; color: #ccc; }
+.step-box:last-child::after { display: none; }
+.step-num { width: 40px; height: 40px; border-radius: 50%; background: #499cd7; color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 700; margin: 0 auto 12px; }
+.step-box h4 { font-size: 15px; margin-bottom: 6px; }
+.step-box p { font-size: 12px; color: #777; line-height: 1.5; }
+
+/* Future */
+.future { background: linear-gradient(135deg, #1a2332, #2c3e50); border-radius: 16px; padding: 48px; color: #fff; margin-bottom: 60px; }
+.future h2 { font-size: 24px; margin-bottom: 24px; }
+.future-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.future-item { padding: 20px; background: rgba(255,255,255,.06); border-radius: 10px; }
+.future-item h4 { font-size: 14px; margin-bottom: 6px; }
+.future-item p { font-size: 13px; color: #8899aa; line-height: 1.5; }
+
+/* CTA */
+.hiw-cta { text-align: center; }
+.hiw-cta p { color: #777; font-size: 16px; margin-bottom: 20px; }
+
+footer { background: #1a2332; color: #aab; padding: 40px 20px; text-align: center; margin-top: 60px; }
+footer .links a { color: #8899aa; text-decoration: none; margin: 0 12px; font-size: 14px; }
+footer .links a:hover { color: #fff; }
+footer .copy { font-size: 13px; color: #556; margin-top: 16px; }
+@media (max-width: 768px) {
+  nav { display: none; }
+  .score-overview, .rank-grid, .future-grid { grid-template-columns: 1fr; }
+  .factor-grid { grid-template-columns: 1fr; }
+  .steps-flow { grid-template-columns: 1fr; }
+  .step-box::after { display: none; }
+  .formula { font-size: 20px; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <a href="index.html" class="logo">Startup<span>Finder</span></a>
+        <nav>
+      <a href="about.html">소개</a>
+      <a href="how-it-works.html">작동 원리</a>
+      <a href="index.html#ranking">랭킹</a>
+      <a href="countries.html">국가별</a>
+      <a href="index.html#directories">디렉토리</a>
+      <a href="faster-approval.html">빠른 승인</a>
+      <a href="booster.html">부스터</a>
+      <a href="premium-profile.html">프리미엄</a>
+      <a href="advertising.html">광고</a>
+      <a href="blog.html">블로그</a>
+      <a href="create.html">스타트업 등록</a>
+    </nav>
+  </div>
+</header>
+
+<div class="page-hero">
+  <h1>작동 원리</h1>
+  <p>StartupFinder의 랭킹 시스템이 어떻게 작동하는지, SF Score가 어떻게 계산되는지 알아보세요.</p>
+</div>
+
+<div class="container">
+
+  <!-- Score Overview -->
+  <h2 class="section-title">스코어 시스템</h2>
+  <p class="section-sub">StartupFinder는 세 가지 핵심 점수로 스타트업의 인터넷 중요도와 소셜 영향력을 측정합니다.</p>
+
+  <div class="score-overview">
+    <div class="score-card sc-score">
+      <div class="sc-icon">🏆</div>
+      <h3>SF Score</h3>
+      <div class="sc-range">0 ~ 100,000</div>
+      <p>스타트업의 인터넷 중요도와 소셜 영향력을 종합적으로 반영하는 최종 점수. SF Web과 SF Social을 기반으로 산출됩니다.</p>
+    </div>
+    <div class="score-card sc-web">
+      <div class="sc-icon">🌐</div>
+      <h3>SF Web</h3>
+      <div class="sc-range" style="color:#4caf50;">0 ~ 100,000</div>
+      <p>스타트업 웹사이트의 인터넷 중요도를 측정합니다. 인바운드 링크, 내부 링크 분포, 트래픽 등을 분석합니다.</p>
+    </div>
+    <div class="score-card sc-social">
+      <div class="sc-icon">💬</div>
+      <h3>SF Social</h3>
+      <div class="sc-range" style="color:#e91e63;">0 ~ 100,000</div>
+      <p>스타트업의 소셜 미디어 영향력을 측정합니다. Facebook, Twitter 등의 팔로워, 참여도를 분석합니다.</p>
+    </div>
+  </div>
+
+  <!-- Formula -->
+  <div class="formula-box">
+    <h3>SF Score 산출 공식</h3>
+    <div class="formula">
+      <span class="sr">SF Score</span> = f( <span class="web">SF Web</span> , <span class="social">SF Social</span> )
+    </div>
+    <p class="formula-note">SF Score는 SF Web과 SF Social의 가중 합산으로 계산됩니다. 두 점수 모두 로그 스케일로 계산되므로, 점수가 높을수록 향상이 어려워집니다. 이는 상위 랭킹의 경쟁 강도를 반영합니다.</p>
+  </div>
+
+  <!-- SF Web Detail -->
+  <div class="detail-section">
+    <h2><span class="tag tag-web">SF Web</span> 측정 요소</h2>
+    <div class="factor-grid">
+      <div class="factor-card">
+        <div class="factor-icon" style="background:#e8f5e9; color:#2e7d32;">🔗</div>
+        <div><h4>인바운드 링크 수 & 품질</h4><p>다른 웹사이트에서 스타트업 페이지로 연결되는 링크의 수와 품질. 링크 출처의 권위가 높을수록 SF Web이 높아집니다.</p></div>
+      </div>
+      <div class="factor-card">
+        <div class="factor-icon" style="background:#e8f5e9; color:#2e7d32;">🔀</div>
+        <div><h4>내부 링크 분포</h4><p>같은 도메인 내 페이지 간 링크의 분포. 내부 링크가 잘 구조화될수록 SF Web이 높아집니다.</p></div>
+      </div>
+      <div class="factor-card">
+        <div class="factor-icon" style="background:#e8f5e9; color:#2e7d32;">👁️</div>
+        <div><h4>추정 방문자 & 유니크 방문자</h4><p>웹사이트의 추정 방문자 수와 순수 방문자 수. 트래픽이 많을수록 높은 점수를 받습니다.</p></div>
+      </div>
+      <div class="factor-card">
+        <div class="factor-icon" style="background:#e8f5e9; color:#2e7d32;">📄</div>
+        <div><h4>페이지뷰 & 체류시간</h4><p>추정 페이지뷰, 방문당 페이지뷰 수, 평균 방문 체류시간을 종합적으로 분석합니다.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SF Social Detail -->
+  <div class="detail-section">
+    <h2><span class="tag tag-social">SF Social</span> 측정 요소</h2>
+    <div class="factor-grid">
+      <div class="factor-card">
+        <div class="factor-icon" style="background:#e3f2fd; color:#1565c0;">📘</div>
+        <div><h4>Facebook 지표</h4><p>팔로워 수, 좋아요, 댓글, 공유 수, 팬 페이지 참여자 수를 분석합니다.</p></div>
+      </div>
+      <div class="factor-card">
+        <div class="factor-icon" style="background:#e0f7fa; color:#00838f;">🐦</div>
+        <div><h4>Twitter (X) 지표</h4><p>팔로워 수, 리트윗 품질, 즐겨찾기 수, 계정 참여도를 분석합니다.</p></div>
+      </div>
+      <div class="factor-card">
+        <div class="factor-icon" style="background:#f3e5f5; color:#7b1fa2;">💼</div>
+        <div><h4>LinkedIn 지표 (예정)</h4><p>회사 페이지 팔로워, 직원 수, 게시물 참여도를 분석할 예정입니다.</p></div>
+      </div>
+      <div class="factor-card">
+        <div class="factor-icon" style="background:#fce4ec; color:#c62828;">📺</div>
+        <div><h4>YouTube 지표 (예정)</h4><p>구독자 수, 동영상 조회수, 참여도를 분석할 예정입니다.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Logarithmic Scale -->
+  <div class="log-box">
+    <h2>로그 스케일 (Logarithmic Scale)</h2>
+    <p>SF Score는 선형이 아닌 로그 스케일로 계산됩니다. 이는 점수가 높아질수록 동일한 점수 향상에 더 많은 노력이 필요하다는 것을 의미합니다.</p>
+    <div class="log-visual">
+      <div class="log-bar" style="height:20%;"><div class="bar-val">쉬움</div><div class="bar-label">0~20K</div></div>
+      <div class="log-bar" style="height:30%;"><div class="bar-label">20~40K</div></div>
+      <div class="log-bar" style="height:45%;"><div class="bar-label">40~60K</div></div>
+      <div class="log-bar" style="height:65%;"><div class="bar-label">60~70K</div></div>
+      <div class="log-bar" style="height:80%;"><div class="bar-label">70~80K</div></div>
+      <div class="log-bar" style="height:92%;"><div class="bar-label">80~90K</div></div>
+      <div class="log-bar" style="height:100%;"><div class="bar-val">매우 어려움</div><div class="bar-label">90K+</div></div>
+    </div>
+    <p style="text-align:center; font-size:12px; color:#999; margin-top:8px;">← 점수 구간별 향상 난이도 →</p>
+    <div class="log-comparison">
+      <div class="log-comp easy">
+        <h4>30,000 → 50,000</h4>
+        <p>비교적 달성하기 쉬운 구간. 기본적인 웹 인프라와 소셜 활동으로 충분히 도달 가능합니다.</p>
+      </div>
+      <div class="log-comp hard">
+        <h4>80,000 → 90,000</h4>
+        <p>매우 어려운 구간. 최상위 권위의 백링크, 대규모 트래픽, 활발한 소셜 참여가 필요합니다.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Ranking Types -->
+  <div class="rank-types">
+    <h2>랭킹 유형</h2>
+    <div class="rank-grid">
+      <div class="rank-type-card">
+        <div class="rt-icon">🌍</div>
+        <h3>글로벌 랭킹</h3>
+        <p>전 세계 모든 스타트업을 SF Score 기준으로 순위를 매깁니다. 국경을 넘어 스타트업의 위치를 확인하세요.</p>
+      </div>
+      <div class="rank-type-card">
+        <div class="rt-icon">🏳️</div>
+        <h3>국가별 랭킹</h3>
+        <p>같은 국가 내 스타트업끼리 비교합니다. 해당 국가의 스타트업 생태계에서의 위치를 파악할 수 있습니다.</p>
+      </div>
+      <div class="rank-type-card">
+        <div class="rt-icon">📍</div>
+        <h3>지역별 랭킹</h3>
+        <p>같은 주/도 내 스타트업끼리 비교합니다. 지역 생태계에서의 경쟁력을 확인하세요.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Steps to participate -->
+  <div class="steps-section">
+    <h2>랭킹 참여 방법</h2>
+    <div class="steps-flow">
+      <div class="step-box">
+        <div class="step-num">1</div>
+        <h4>스타트업 등록</h4>
+        <p>웹사이트 URL과 기본 정보를 입력하여 스타트업을 등록합니다.</p>
+      </div>
+      <div class="step-box">
+        <div class="step-num">2</div>
+        <h4>검토 & 승인</h4>
+        <p>팀이 스타트업 정보를 검토하고 승인합니다. 빠른 승인도 가능합니다.</p>
+      </div>
+      <div class="step-box">
+        <div class="step-num">3</div>
+        <h4>점수 산출</h4>
+        <p>알고리즘이 SF Web, SF Social을 분석하여 SF Score를 산출합니다.</p>
+      </div>
+      <div class="step-box">
+        <div class="step-num">4</div>
+        <h4>랭킹 반영</h4>
+        <p>SF Score에 따라 글로벌, 국가별, 지역별 랭킹에 자동 반영됩니다.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Future data sources -->
+  <div class="future">
+    <h2>향후 추가 예정 데이터 소스</h2>
+    <div class="future-grid">
+      <div class="future-item"><h4>💼 LinkedIn</h4><p>회사 페이지 팔로워, 직원 수, 게시물 참여도</p></div>
+      <div class="future-item"><h4>📌 Pinterest</h4><p>핀 수, 보드 팔로워, 참여도</p></div>
+      <div class="future-item"><h4>📺 YouTube</h4><p>구독자, 동영상 조회수, 채널 참여도</p></div>
+      <div class="future-item"><h4>📸 Instagram</h4><p>팔로워, 게시물 참여도, 리치</p></div>
+      <div class="future-item"><h4>🤖 AI 분석</h4><p>자연어 처리 기반 브랜드 인지도 분석</p></div>
+      <div class="future-item"><h4>📱 앱스토어</h4><p>앱 다운로드, 평점, 리뷰 분석</p></div>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div class="hiw-cta">
+    <p>지금 스타트업을 등록하고 SF Score를 확인해보세요.</p>
+    <a href="create.html" class="btn">스타트업 등록하기</a>
+  </div>
+
+</div>
+
+<footer>
+  <div class="links">
+    <a href="index.html">홈</a>
+    <a href="about.html">소개</a>
+    <a href="how-it-works.html">작동 원리</a>
+    <a href="#">이용약관</a>
+    <a href="#">개인정보처리방침</a>
+  </div>
+  <p class="copy">&copy; 2026 StartupFinder. All rights reserved.</p>
+  <div style="margin-top:20px;"><a href="admin.html" style="display:inline-block; padding:8px 20px; background:#e53935; color:#fff; font-size:13px; font-weight:600; text-decoration:none; border-radius:6px; transition:background .2s;" onmouseover="this.style.background='#c62828'" onmouseout="this.style.background='#e53935'">🔒 관리자 대시보드</a></div>
+</footer>
+
+</body>
+</html>

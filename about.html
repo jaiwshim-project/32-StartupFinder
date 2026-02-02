@@ -1,0 +1,286 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>회사 소개 - StartupFinder</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif; color: #333; background: #f5f7fa; }
+header { background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.08); position: sticky; top: 0; z-index: 100; }
+.header-inner { max-width: 1200px; margin: 0 auto; padding: 0 20px; display: flex; align-items: center; justify-content: space-between; height: 64px; }
+.logo { font-size: 22px; font-weight: 700; color: #499cd7; text-decoration: none; }
+.logo span { color: #333; }
+nav a { text-decoration: none; color: #555; margin-left: 28px; font-size: 15px; font-weight: 500; transition: color .2s; }
+nav a:hover, nav a.active { color: #499cd7; }
+.page-hero { background: linear-gradient(135deg, #1a2332 0%, #2c3e50 100%); color: #fff; text-align: center; padding: 80px 20px 70px; }
+.page-hero h1 { font-size: 40px; margin-bottom: 16px; }
+.page-hero p { opacity: .85; font-size: 18px; max-width: 640px; margin: 0 auto; line-height: 1.8; }
+.container { max-width: 1000px; margin: 0 auto; padding: 60px 20px; }
+.btn { display: inline-block; padding: 14px 36px; background: #499cd7; color: #fff; border-radius: 8px; text-decoration: none; font-weight: 700; font-size: 16px; transition: background .2s; }
+.btn:hover { background: #3a85bb; }
+
+/* Mission */
+.mission { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-bottom: 80px; align-items: center; }
+.mission-text h2 { font-size: 28px; margin-bottom: 16px; color: #1a2332; }
+.mission-text p { font-size: 16px; color: #555; line-height: 1.8; margin-bottom: 12px; }
+.mission-visual { background: linear-gradient(135deg, #499cd7, #2c6faa); border-radius: 20px; padding: 48px; text-align: center; color: #fff; }
+.mission-visual .big-icon { font-size: 64px; margin-bottom: 16px; }
+.mission-visual h3 { font-size: 22px; margin-bottom: 8px; }
+.mission-visual p { font-size: 14px; opacity: .9; }
+
+/* Stats */
+.about-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; margin-bottom: 80px; }
+.about-stat { background: #fff; border-radius: 16px; padding: 36px 20px; text-align: center; box-shadow: 0 4px 20px rgba(0,0,0,0.06); }
+.about-stat .num { font-size: 36px; font-weight: 800; color: #499cd7; margin-bottom: 4px; }
+.about-stat .lbl { font-size: 14px; color: #888; }
+
+/* Values */
+.values { margin-bottom: 80px; }
+.values h2 { font-size: 28px; text-align: center; margin-bottom: 40px; color: #1a2332; }
+.values-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+.value-card { background: #fff; border-radius: 16px; padding: 36px 28px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); text-align: center; transition: transform .2s; }
+.value-card:hover { transform: translateY(-4px); }
+.value-card .v-icon { font-size: 40px; margin-bottom: 16px; }
+.value-card h3 { font-size: 18px; margin-bottom: 10px; color: #1a2332; }
+.value-card p { font-size: 14px; color: #777; line-height: 1.7; }
+
+/* Timeline */
+.timeline { margin-bottom: 80px; }
+.timeline h2 { font-size: 28px; text-align: center; margin-bottom: 40px; color: #1a2332; }
+.tl-list { position: relative; max-width: 700px; margin: 0 auto; }
+.tl-list::before { content: ''; position: absolute; left: 20px; top: 0; bottom: 0; width: 3px; background: #e0e0e0; border-radius: 2px; }
+.tl-item { display: flex; gap: 24px; margin-bottom: 32px; position: relative; }
+.tl-dot { width: 42px; height: 42px; border-radius: 50%; background: #499cd7; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 700; font-size: 13px; flex-shrink: 0; z-index: 1; }
+.tl-content { background: #fff; border-radius: 12px; padding: 20px 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); flex: 1; }
+.tl-content h4 { font-size: 16px; margin-bottom: 6px; color: #333; }
+.tl-content p { font-size: 14px; color: #777; line-height: 1.6; }
+
+/* Team */
+.team { margin-bottom: 80px; }
+.team h2 { font-size: 28px; text-align: center; margin-bottom: 40px; color: #1a2332; }
+.team-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
+.team-card { background: #fff; border-radius: 16px; padding: 32px 20px; text-align: center; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+.team-avatar { width: 80px; height: 80px; border-radius: 50%; background: linear-gradient(135deg, #499cd7, #2c6faa); margin: 0 auto 16px; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 28px; font-weight: 700; }
+.team-card h4 { font-size: 16px; margin-bottom: 4px; }
+.team-card .role { font-size: 13px; color: #499cd7; font-weight: 600; margin-bottom: 8px; }
+.team-card p { font-size: 12px; color: #999; line-height: 1.5; }
+
+/* Products */
+.products { margin-bottom: 60px; }
+.products h2 { font-size: 28px; text-align: center; margin-bottom: 40px; color: #1a2332; }
+.prod-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+.prod-card { background: #fff; border-radius: 12px; padding: 28px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); display: flex; gap: 16px; align-items: start; }
+.prod-icon { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; }
+.prod-card h4 { font-size: 16px; margin-bottom: 6px; }
+.prod-card p { font-size: 13px; color: #777; line-height: 1.6; }
+
+/* CTA */
+.about-cta { text-align: center; background: linear-gradient(135deg, #499cd7, #2c6faa); border-radius: 20px; padding: 60px; color: #fff; }
+.about-cta h2 { font-size: 28px; margin-bottom: 12px; }
+.about-cta p { opacity: .9; margin-bottom: 24px; font-size: 16px; }
+.btn-white { background: #fff; color: #499cd7; }
+.btn-white:hover { background: #f0f0f0; }
+
+footer { background: #1a2332; color: #aab; padding: 40px 20px; text-align: center; margin-top: 60px; }
+footer .links a { color: #8899aa; text-decoration: none; margin: 0 12px; font-size: 14px; }
+footer .links a:hover { color: #fff; }
+footer .copy { font-size: 13px; color: #556; margin-top: 16px; }
+@media (max-width: 768px) {
+  nav { display: none; }
+  .mission { grid-template-columns: 1fr; }
+  .about-stats { grid-template-columns: repeat(2, 1fr); }
+  .values-grid { grid-template-columns: 1fr; }
+  .team-grid { grid-template-columns: repeat(2, 1fr); }
+  .prod-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <a href="index.html" class="logo">Startup<span>Finder</span></a>
+        <nav>
+      <a href="about.html">소개</a>
+      <a href="how-it-works.html">작동 원리</a>
+      <a href="index.html#ranking">랭킹</a>
+      <a href="countries.html">국가별</a>
+      <a href="index.html#directories">디렉토리</a>
+      <a href="faster-approval.html">빠른 승인</a>
+      <a href="booster.html">부스터</a>
+      <a href="premium-profile.html">프리미엄</a>
+      <a href="advertising.html">광고</a>
+      <a href="blog.html">블로그</a>
+      <a href="create.html">스타트업 등록</a>
+    </nav>
+  </div>
+</header>
+
+<div class="page-hero">
+  <h1>회사 소개</h1>
+  <p>StartupFinder는 전 세계 스타트업을 발견하고, 분류하고, 알리는 것을 목표로 하는 메타스타트업 플랫폼입니다.</p>
+</div>
+
+<div class="container">
+
+  <!-- Mission -->
+  <div class="mission">
+    <div class="mission-text">
+      <h2>우리의 미션</h2>
+      <p>StartupFinder는 스타트업의 성장과 디지털 노출에 기여하기 위해 탄생했습니다. 독자적인 알고리즘으로 매일 전 세계 스타트업의 웹 링크와 소셜 미디어 활동을 분석하여 고유한 글로벌 랭킹을 생성합니다.</p>
+      <p>스타트업이 글로벌 가시성을 확보하고, SEO를 개선하며, 데이터를 전략적 의사결정으로 전환하고, 성장을 가속화할 수 있도록 돕는 것이 우리의 사명입니다.</p>
+    </div>
+    <div class="mission-visual">
+      <div class="big-icon">🌍</div>
+      <h3>전 세계 스타트업을 연결합니다</h3>
+      <p>195개국의 스타트업 생태계를 하나의 플랫폼에서</p>
+    </div>
+  </div>
+
+  <!-- Stats -->
+  <div class="about-stats">
+    <div class="about-stat"><div class="num">152K+</div><div class="lbl">등록 스타트업</div></div>
+    <div class="about-stat"><div class="num">195</div><div class="lbl">국가</div></div>
+    <div class="about-stat"><div class="num">500K+</div><div class="lbl">월간 방문자</div></div>
+    <div class="about-stat"><div class="num">2018</div><div class="lbl">서비스 시작</div></div>
+  </div>
+
+  <!-- Values -->
+  <div class="values">
+    <h2>핵심 가치</h2>
+    <div class="values-grid">
+      <div class="value-card">
+        <div class="v-icon">📊</div>
+        <h3>데이터 기반</h3>
+        <p>모든 랭킹과 분석은 객관적인 데이터와 독자적인 알고리즘에 기반합니다. 투명하고 신뢰할 수 있는 정보를 제공합니다.</p>
+      </div>
+      <div class="value-card">
+        <div class="v-icon">🌐</div>
+        <h3>글로벌 관점</h3>
+        <p>실리콘밸리뿐만 아니라 전 세계 195개국의 스타트업 생태계를 공평하게 분석하고 조명합니다.</p>
+      </div>
+      <div class="value-card">
+        <div class="v-icon">🚀</div>
+        <h3>성장 지원</h3>
+        <p>단순 랭킹을 넘어 스타트업의 실질적인 성장을 지원하는 도구와 서비스를 제공합니다.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Timeline -->
+  <div class="timeline">
+    <h2>우리의 여정</h2>
+    <div class="tl-list">
+      <div class="tl-item">
+        <div class="tl-dot">&#39;18</div>
+        <div class="tl-content"><h4>서비스 런칭</h4><p>스타트업 랭킹 플랫폼의 첫 번째 버전 출시. SF Score 알고리즘 개발 및 초기 10,000개 스타트업 등록.</p></div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot">&#39;19</div>
+        <div class="tl-content"><h4>50,000 스타트업 돌파</h4><p>등록 스타트업 50,000개 달성. 국가별 랭킹 기능 추가, SF Social 점수 시스템 도입.</p></div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot">&#39;20</div>
+        <div class="tl-content"><h4>프리미엄 서비스 출시</h4><p>SF Booster, SF Faster Approval, 프리미엄 프로필 등 유료 서비스 런칭.</p></div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot">&#39;22</div>
+        <div class="tl-content"><h4>100,000 스타트업 돌파</h4><p>글로벌 100,000 스타트업 등록 달성. API 서비스 제공 시작. 블로그 및 인사이트 섹션 추가.</p></div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot">&#39;24</div>
+        <div class="tl-content"><h4>광고 플랫폼 & 데이터 분석 강화</h4><p>광고 서비스 출시. 고급 분석 대시보드 및 경쟁사 비교 기능 도입.</p></div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot" style="background:#4caf50;">&#39;26</div>
+        <div class="tl-content"><h4>AI 기반 분석 도입</h4><p>AI 기반 스타트업 트렌드 예측, 자동 카테고리 분류, LinkedIn/YouTube 데이터 소스 통합 진행 중.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Team -->
+  <div class="team">
+    <h2>팀 소개</h2>
+    <div class="team-grid">
+      <div class="team-card">
+        <div class="team-avatar">J</div>
+        <h4>Jonathan Nieto</h4>
+        <div class="role">CEO & Founder</div>
+        <p>플랫폼 비전 수립 및 전체 전략 총괄</p>
+      </div>
+      <div class="team-card">
+        <div class="team-avatar" style="background:linear-gradient(135deg,#6c63ff,#3f3d9e);">S</div>
+        <h4>Sarah Kim</h4>
+        <div class="role">CTO</div>
+        <p>SF Score 알고리즘 설계 및 기술 인프라 관리</p>
+      </div>
+      <div class="team-card">
+        <div class="team-avatar" style="background:linear-gradient(135deg,#e91e63,#ad1457);">M</div>
+        <h4>Maria Garcia</h4>
+        <div class="role">Head of Data</div>
+        <p>데이터 수집, 분석 파이프라인 및 품질 관리</p>
+      </div>
+      <div class="team-card">
+        <div class="team-avatar" style="background:linear-gradient(135deg,#ff9800,#f57c00);">D</div>
+        <h4>David Park</h4>
+        <div class="role">Head of Growth</div>
+        <p>사용자 성장, 마케팅 전략 및 파트너십 총괄</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Products -->
+  <div class="products">
+    <h2>서비스 & 제품</h2>
+    <div class="prod-grid">
+      <div class="prod-card">
+        <div class="prod-icon" style="background:#e3f2fd; color:#1565c0;">📊</div>
+        <div><h4>스타트업 랭킹</h4><p>SF Score 기반 글로벌 스타트업 순위. 국가별, 카테고리별 필터링 및 상세 프로필 제공.</p></div>
+      </div>
+      <div class="prod-card">
+        <div class="prod-icon" style="background:#fce4ec; color:#c62828;">⚡</div>
+        <div><h4><a href="faster-approval.html" style="color:inherit; text-decoration:none;">SF 빠른 승인</a></h4><p>스타트업 등록 검토를 우선 처리. 24시간 내 승인 보장.</p></div>
+      </div>
+      <div class="prod-card">
+        <div class="prod-icon" style="background:#f3e5f5; color:#7b1fa2;">🚀</div>
+        <div><h4><a href="booster.html" style="color:inherit; text-decoration:none;">SF 부스터</a></h4><p>120+ 스타트업 디렉토리에 자동 제출하여 SEO 백링크 확보.</p></div>
+      </div>
+      <div class="prod-card">
+        <div class="prod-icon" style="background:#fff8e1; color:#f57f17;">⭐</div>
+        <div><h4><a href="premium-profile.html" style="color:inherit; text-decoration:none;">SF 프리미엄 프로필</a></h4><p>검증 배지, 스크린샷 갤러리, 상세 통계 등 프리미엄 프로필 기능.</p></div>
+      </div>
+      <div class="prod-card">
+        <div class="prod-icon" style="background:#e8f5e9; color:#2e7d32;">📢</div>
+        <div><h4><a href="advertising.html" style="color:inherit; text-decoration:none;">SF 광고</a></h4><p>전 세계 스타트업 창업자, 투자자, 기술 전문가에게 직접 도달하는 광고.</p></div>
+      </div>
+      <div class="prod-card">
+        <div class="prod-icon" style="background:#e0f7fa; color:#00838f;">🔗</div>
+        <div><h4>API 서비스</h4><p>스타트업 데이터를 프로그래밍 방식으로 접근할 수 있는 RESTful API.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div class="about-cta">
+    <h2>함께 성장하세요</h2>
+    <p>지금 스타트업을 등록하고 전 세계 랭킹에 참여하세요.</p>
+    <a href="create.html" class="btn btn-white">스타트업 등록하기</a>
+  </div>
+
+</div>
+
+<footer>
+  <div class="links">
+    <a href="index.html">홈</a>
+    <a href="about.html">소개</a>
+    <a href="how-it-works.html">작동 원리</a>
+    <a href="#">이용약관</a>
+    <a href="#">개인정보처리방침</a>
+  </div>
+  <p class="copy">&copy; 2026 StartupFinder. All rights reserved.</p>
+  <div style="margin-top:20px;"><a href="admin.html" style="display:inline-block; padding:8px 20px; background:#e53935; color:#fff; font-size:13px; font-weight:600; text-decoration:none; border-radius:6px; transition:background .2s;" onmouseover="this.style.background='#c62828'" onmouseout="this.style.background='#e53935'">🔒 관리자 대시보드</a></div>
+</footer>
+
+</body>
+</html>

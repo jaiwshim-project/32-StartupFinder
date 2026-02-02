@@ -1,0 +1,173 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SF 부스터 - StartupFinder</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif; color: #333; background: #f5f7fa; }
+header { background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.08); position: sticky; top: 0; z-index: 100; }
+.header-inner { max-width: 1200px; margin: 0 auto; padding: 0 20px; display: flex; align-items: center; justify-content: space-between; height: 64px; }
+.logo { font-size: 22px; font-weight: 700; color: #499cd7; text-decoration: none; }
+.logo span { color: #333; }
+nav a { text-decoration: none; color: #555; margin-left: 28px; font-size: 15px; font-weight: 500; transition: color .2s; }
+nav a:hover { color: #499cd7; }
+.page-hero { background: linear-gradient(135deg, #6c63ff 0%, #3f3d9e 100%); color: #fff; text-align: center; padding: 60px 20px 50px; }
+.page-hero h1 { font-size: 36px; margin-bottom: 12px; }
+.page-hero p { opacity: .9; font-size: 17px; max-width: 640px; margin: 0 auto; line-height: 1.7; }
+.container { max-width: 1000px; margin: 0 auto; padding: 40px 20px; }
+.btn { display: inline-block; padding: 14px 36px; background: #6c63ff; color: #fff; border-radius: 8px; text-decoration: none; font-weight: 700; font-size: 16px; transition: background .2s; }
+.btn:hover { background: #5a52e0; }
+
+.stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 50px; }
+.stat-box { background: #fff; border-radius: 12px; padding: 24px; text-align: center; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+.stat-box .num { font-size: 32px; font-weight: 800; color: #6c63ff; }
+.stat-box .label { font-size: 13px; color: #888; margin-top: 4px; }
+
+.features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-bottom: 50px; }
+.feature { background: #fff; border-radius: 12px; padding: 28px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+.feature-icon { font-size: 36px; margin-bottom: 12px; }
+.feature h3 { font-size: 16px; margin-bottom: 8px; }
+.feature p { font-size: 13px; color: #777; line-height: 1.6; }
+
+h2 { font-size: 24px; text-align: center; margin-bottom: 32px; }
+
+.pricing { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-bottom: 50px; }
+.plan { background: #fff; border-radius: 12px; padding: 36px 24px; text-align: center; box-shadow: 0 4px 16px rgba(0,0,0,0.08); transition: transform .2s; }
+.plan:hover { transform: translateY(-4px); }
+.plan.pop { border: 2px solid #6c63ff; position: relative; }
+.plan.pop::after { content: '인기'; position: absolute; top: -12px; right: 20px; background: #ff6b6b; color: #fff; padding: 4px 14px; border-radius: 20px; font-size: 12px; font-weight: 700; }
+.plan h3 { font-size: 20px; color: #6c63ff; margin-bottom: 8px; }
+.plan .price { font-size: 36px; font-weight: 800; color: #333; }
+.plan .price span { font-size: 14px; color: #999; font-weight: 400; }
+.plan .plan-desc { color: #777; font-size: 13px; margin: 12px 0 20px; }
+.plan ul { list-style: none; text-align: left; margin-bottom: 24px; }
+.plan ul li { padding: 6px 0; font-size: 14px; color: #555; }
+.plan ul li::before { content: '✓ '; color: #6c63ff; font-weight: 700; }
+
+.dir-preview { background: #fff; border-radius: 12px; padding: 28px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); margin-bottom: 50px; }
+.dir-preview h3 { font-size: 18px; margin-bottom: 16px; }
+.dir-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; }
+.dir-item { padding: 10px 14px; background: #f8f9ff; border-radius: 8px; font-size: 13px; display: flex; justify-content: space-between; align-items: center; }
+.dir-item .dr { font-weight: 700; color: #6c63ff; font-size: 12px; }
+
+footer { background: #1a2332; color: #aab; padding: 40px 20px; text-align: center; }
+footer .links a { color: #8899aa; text-decoration: none; margin: 0 12px; font-size: 14px; }
+footer .copy { font-size: 13px; color: #556; margin-top: 16px; }
+@media (max-width: 768px) { nav { display: none; } .features, .pricing, .stats-row { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <a href="index.html" class="logo">Startup<span>Finder</span></a>
+        <nav>
+      <a href="about.html">소개</a>
+      <a href="how-it-works.html">작동 원리</a>
+      <a href="index.html#ranking">랭킹</a>
+      <a href="countries.html">국가별</a>
+      <a href="index.html#directories">디렉토리</a>
+      <a href="faster-approval.html">빠른 승인</a>
+      <a href="booster.html">부스터</a>
+      <a href="premium-profile.html">프리미엄</a>
+      <a href="advertising.html">광고</a>
+      <a href="blog.html">블로그</a>
+      <a href="create.html">스타트업 등록</a>
+    </nav>
+  </div>
+</header>
+
+<div class="page-hero">
+  <h1>SF 부스터</h1>
+  <p>120+ 스타트업 디렉토리에 자동으로 제출하여 SEO 백링크를 확보하고 온라인 가시성을 극대화하세요.</p>
+</div>
+
+<div class="container">
+
+  <div class="stats-row">
+    <div class="stat-box"><div class="num">120+</div><div class="label">디렉토리</div></div>
+    <div class="stat-box"><div class="num">97</div><div class="label">최고 DR 점수</div></div>
+    <div class="stat-box"><div class="num">85%</div><div class="label">Do-Follow 비율</div></div>
+    <div class="stat-box"><div class="num">15,000+</div><div class="label">이용 스타트업</div></div>
+  </div>
+
+  <div class="features">
+    <div class="feature"><div class="feature-icon">🚀</div><h3>자동 제출</h3><p>스타트업 정보를 한 번 입력하면 선택한 디렉토리에 자동으로 제출됩니다.</p></div>
+    <div class="feature"><div class="feature-icon">📊</div><h3>제출 현황 트래킹</h3><p>각 디렉토리별 제출 상태와 승인 여부를 실시간으로 확인하세요.</p></div>
+    <div class="feature"><div class="feature-icon">🔗</div><h3>고품질 백링크</h3><p>DR 50 이상의 검증된 디렉토리에서 SEO에 도움이 되는 백링크를 확보합니다.</p></div>
+    <div class="feature"><div class="feature-icon">🎯</div><h3>카테고리 매칭</h3><p>스타트업 유형에 맞는 전문 디렉토리를 자동으로 추천합니다.</p></div>
+    <div class="feature"><div class="feature-icon">📈</div><h3>SEO 리포트</h3><p>백링크 현황, 도메인 권위 변화를 월별 리포트로 제공합니다.</p></div>
+    <div class="feature"><div class="feature-icon">🛡️</div><h3>스팸 방지</h3><p>스팸 점수가 높은 디렉토리는 자동으로 제외합니다.</p></div>
+  </div>
+
+  <div class="dir-preview">
+    <h3>포함된 주요 디렉토리 (미리보기)</h3>
+    <div class="dir-list">
+      <div class="dir-item">Product Hunt <span class="dr">DR 93</span></div>
+      <div class="dir-item">Crunchbase <span class="dr">DR 91</span></div>
+      <div class="dir-item">AngelList <span class="dr">DR 91</span></div>
+      <div class="dir-item">G2 <span class="dr">DR 89</span></div>
+      <div class="dir-item">Capterra <span class="dr">DR 88</span></div>
+      <div class="dir-item">Medium <span class="dr">DR 94</span></div>
+      <div class="dir-item">BetaList <span class="dr">DR 72</span></div>
+      <div class="dir-item">SaaSHub <span class="dr">DR 70</span></div>
+      <div class="dir-item">AlternativeTo <span class="dr">DR 80</span></div>
+      <div class="dir-item">Indie Hackers <span class="dr">DR 74</span></div>
+      <div class="dir-item">F6S <span class="dr">DR 73</span></div>
+      <div class="dir-item">StartupStash <span class="dr">DR 62</span></div>
+    </div>
+    <p style="text-align:center; margin-top:16px;"><a href="index.html#directories" style="color:#6c63ff; font-size:14px;">전체 디렉토리 목록 보기 &rarr;</a></p>
+  </div>
+
+  <h2>가격 플랜</h2>
+  <div class="pricing">
+    <div class="plan">
+      <h3>베이직</h3>
+      <div class="price">$79 <span>/ 1회</span></div>
+      <p class="plan-desc">기본 백링크 확보</p>
+      <ul>
+        <li>30+ 디렉토리 제출</li>
+        <li>제출 현황 대시보드</li>
+        <li>기본 리포트</li>
+      </ul>
+      <a href="#" class="btn" style="background:#555;">선택하기</a>
+    </div>
+    <div class="plan pop">
+      <h3>전문가</h3>
+      <div class="price">$149 <span>/ 1회</span></div>
+      <p class="plan-desc">전문적인 SEO 전략</p>
+      <ul>
+        <li>60+ 디렉토리 제출</li>
+        <li>카테고리 매칭</li>
+        <li>월별 SEO 리포트</li>
+        <li>우선 지원</li>
+      </ul>
+      <a href="#" class="btn">선택하기</a>
+    </div>
+    <div class="plan">
+      <h3>얼티밋</h3>
+      <div class="price">$249 <span>/ 1회</span></div>
+      <p class="plan-desc">최대 커버리지</p>
+      <ul>
+        <li>120+ 전체 디렉토리</li>
+        <li>전문가 프로필 최적화</li>
+        <li>주간 SEO 리포트</li>
+        <li>전담 매니저 배정</li>
+      </ul>
+      <a href="#" class="btn" style="background:#555;">선택하기</a>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <div class="links"><a href="index.html">홈</a><a href="#">이용약관</a><a href="#">개인정보처리방침</a></div>
+  <p class="copy">&copy; 2026 StartupFinder. All rights reserved.</p>
+  <div style="margin-top:20px;"><a href="admin.html" style="display:inline-block; padding:8px 20px; background:#e53935; color:#fff; font-size:13px; font-weight:600; text-decoration:none; border-radius:6px; transition:background .2s;" onmouseover="this.style.background='#c62828'" onmouseout="this.style.background='#e53935'">🔒 관리자 대시보드</a></div>
+</footer>
+
+</body>
+</html>
+

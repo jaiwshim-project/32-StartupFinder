@@ -1,0 +1,748 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>StartupFinder - 전 세계 스타트업 랭킹 & 디렉토리</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif; color: #333; background: #f5f7fa; }
+
+/* Header */
+header { background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.08); position: sticky; top: 0; z-index: 100; }
+.header-inner { max-width: 1200px; margin: 0 auto; padding: 0 20px; display: flex; align-items: center; justify-content: space-between; height: 64px; }
+.logo { font-size: 22px; font-weight: 700; color: #499cd7; text-decoration: none; }
+.logo span { color: #333; }
+nav a { text-decoration: none; color: #555; margin-left: 28px; font-size: 15px; font-weight: 500; transition: color .2s; }
+nav a:hover { color: #499cd7; }
+
+/* Hero */
+.hero { background: linear-gradient(135deg, #499cd7 0%, #2c6faa 100%); color: #fff; text-align: center; padding: 60px 20px 50px; }
+.hero h1 { font-size: 36px; margin-bottom: 16px; }
+.hero p { font-size: 17px; max-width: 680px; margin: 0 auto; opacity: .9; line-height: 1.7; }
+
+/* Pricing */
+.pricing { max-width: 1000px; margin: -30px auto 40px; padding: 0 20px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+.plan { background: #fff; border-radius: 12px; padding: 32px 24px; text-align: center; box-shadow: 0 4px 16px rgba(0,0,0,0.08); transition: transform .2s; }
+.plan:hover { transform: translateY(-4px); }
+.plan.featured { border: 2px solid #499cd7; position: relative; }
+.plan.featured::after { content: '인기'; position: absolute; top: -12px; right: 20px; background: #ff6b6b; color: #fff; padding: 4px 14px; border-radius: 20px; font-size: 12px; font-weight: 700; }
+.plan h3 { font-size: 20px; color: #499cd7; margin-bottom: 8px; }
+.plan .count { font-size: 40px; font-weight: 800; color: #333; }
+.plan .count span { font-size: 16px; font-weight: 400; color: #888; }
+.plan .desc { color: #777; font-size: 14px; margin: 12px 0 20px; }
+.btn { display: inline-block; padding: 12px 32px; background: #499cd7; color: #fff; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 15px; transition: background .2s; }
+.btn:hover { background: #3a85bb; }
+.btn-outline { background: transparent; border: 2px solid #499cd7; color: #499cd7; }
+.btn-outline:hover { background: #499cd7; color: #fff; }
+
+/* Table Section */
+.section { max-width: 1200px; margin: 0 auto 50px; padding: 0 20px; }
+.section h2 { font-size: 24px; margin-bottom: 8px; color: #333; }
+.section .subtitle { color: #777; margin-bottom: 24px; font-size: 15px; }
+.table-wrap { overflow-x: auto; background: #fff; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+table { width: 100%; border-collapse: collapse; min-width: 900px; }
+thead { background: #499cd7; color: #fff; }
+th { padding: 14px 16px; text-align: left; font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: .5px; white-space: nowrap; }
+td { padding: 14px 16px; border-bottom: 1px solid #f0f0f0; font-size: 14px; }
+tr:hover { background: #f8fbff; }
+.dir-name { font-weight: 600; color: #499cd7; }
+.badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; }
+.badge-do { background: #e8f5e9; color: #2e7d32; }
+.badge-no { background: #fce4ec; color: #c62828; }
+.badge-high { background: #e8f5e9; color: #2e7d32; }
+.badge-mid { background: #fff8e1; color: #f57f17; }
+.badge-low { background: #fce4ec; color: #c62828; }
+.metric { font-weight: 700; color: #333; }
+.metric-bar { width: 50px; height: 6px; background: #e0e0e0; border-radius: 3px; display: inline-block; vertical-align: middle; margin-left: 6px; }
+.metric-fill { height: 100%; border-radius: 3px; background: #499cd7; }
+.spam-low { color: #2e7d32; }
+.spam-mid { color: #f57f17; }
+.spam-high { color: #c62828; }
+.category-tag { display: inline-block; padding: 2px 8px; background: #f0f4ff; color: #499cd7; border-radius: 4px; font-size: 11px; margin-right: 4px; }
+.lock-overlay { position: relative; }
+.lock-row td { filter: blur(3px); user-select: none; pointer-events: none; }
+.lock-banner { text-align: center; padding: 30px; background: linear-gradient(180deg, rgba(255,255,255,0) 0%, #fff 30%); margin-top: -60px; position: relative; z-index: 2; }
+
+/* Category Section */
+.categories { max-width: 1200px; margin: 0 auto 50px; padding: 0 20px; }
+.cat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
+.cat-card { background: #fff; border-radius: 10px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); transition: transform .2s; }
+.cat-card:hover { transform: translateY(-2px); }
+.cat-card h4 { font-size: 15px; margin-bottom: 6px; color: #333; }
+.cat-card p { font-size: 13px; color: #888; line-height: 1.5; }
+.cat-card .cat-count { font-size: 12px; color: #499cd7; font-weight: 600; margin-top: 8px; }
+
+/* CTA */
+.cta { background: linear-gradient(135deg, #499cd7 0%, #2c6faa 100%); text-align: center; padding: 60px 20px; color: #fff; }
+.cta h2 { font-size: 28px; margin-bottom: 12px; }
+.cta p { opacity: .9; margin-bottom: 24px; font-size: 16px; }
+.btn-white { background: #fff; color: #499cd7; font-weight: 700; }
+.btn-white:hover { background: #f0f0f0; }
+
+/* Footer */
+footer { background: #1a2332; color: #aab; padding: 40px 20px; text-align: center; }
+footer .links { margin-bottom: 16px; }
+footer .links a { color: #8899aa; text-decoration: none; margin: 0 12px; font-size: 14px; }
+footer .links a:hover { color: #fff; }
+footer .copy { font-size: 13px; color: #556; }
+
+/* Tabs */
+.tabs { display: flex; gap: 0; margin-bottom: 0; }
+.tab { padding: 12px 24px; background: #e8eef4; color: #555; font-weight: 600; font-size: 14px; cursor: pointer; border: none; border-radius: 8px 8px 0 0; transition: all .2s; }
+.tab.active { background: #499cd7; color: #fff; }
+.tab:hover:not(.active) { background: #d0dce6; }
+
+/* Ranking Section */
+.ranking-section { max-width: 1200px; margin: 0 auto 50px; padding: 0 20px; }
+.ranking-section h2 { font-size: 24px; margin-bottom: 4px; }
+.ranking-section .subtitle { color: #777; margin-bottom: 20px; font-size: 14px; }
+.ranking-update { color: #999; font-size: 13px; margin-bottom: 20px; }
+.rank-table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); overflow: hidden; }
+.rank-table thead { background: #499cd7; color: #fff; }
+.rank-table th { padding: 12px 16px; text-align: left; font-size: 13px; font-weight: 600; }
+.rank-table td { padding: 14px 16px; border-bottom: 1px solid #f0f0f0; font-size: 14px; vertical-align: middle; }
+.rank-table tr:hover { background: #f8fbff; }
+.rank-num { font-size: 18px; font-weight: 800; color: #499cd7; width: 50px; }
+.rank-1 { color: #ffd700; }
+.rank-2 { color: #c0c0c0; }
+.rank-3 { color: #cd7f32; }
+.startup-info { display: flex; align-items: center; gap: 12px; }
+.startup-logo { width: 40px; height: 40px; border-radius: 8px; background: #e8eef4; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 16px; color: #499cd7; flex-shrink: 0; }
+.startup-name { font-weight: 700; color: #333; font-size: 15px; }
+.startup-desc { color: #888; font-size: 12px; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 320px; }
+.sr-score { font-weight: 800; font-size: 16px; color: #333; }
+.sr-score-bar { width: 80px; height: 6px; background: #e0e0e0; border-radius: 3px; margin-top: 4px; }
+.sr-score-fill { height: 100%; border-radius: 3px; background: linear-gradient(90deg, #499cd7, #2c6faa); }
+.country-badge { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: #555; }
+.country-flag { font-size: 18px; }
+.country-rank { font-size: 11px; color: #999; }
+.view-all { text-align: center; margin-top: 20px; }
+
+/* Ad Carousel */
+.ad-carousel { max-width: 1200px; margin: 0 auto 50px; padding: 0 20px; }
+.ad-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+.ad-card { background: #fff; border-radius: 12px; padding: 24px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); border-left: 4px solid #499cd7; transition: transform .2s; }
+.ad-card:hover { transform: translateY(-2px); }
+.ad-card .ad-label { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: #999; margin-bottom: 8px; }
+.ad-card h4 { font-size: 16px; color: #333; margin-bottom: 6px; }
+.ad-card p { font-size: 13px; color: #777; line-height: 1.5; margin-bottom: 12px; }
+.ad-link { font-size: 13px; color: #499cd7; text-decoration: none; font-weight: 600; }
+.ad-link:hover { text-decoration: underline; }
+
+/* New Startups */
+.new-badge { display: inline-block; padding: 2px 8px; background: #e3f2fd; color: #1565c0; border-radius: 4px; font-size: 11px; font-weight: 600; }
+.days-ago { color: #999; font-size: 12px; }
+
+/* Blog */
+.blog-section { max-width: 1200px; margin: 0 auto 50px; padding: 0 20px; }
+.blog-section h2 { font-size: 24px; margin-bottom: 20px; }
+.blog-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; }
+.blog-card { background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.06); transition: transform .2s; }
+.blog-card:hover { transform: translateY(-2px); }
+.blog-thumb { height: 140px; background: linear-gradient(135deg, #499cd7 0%, #2c6faa 100%); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 36px; }
+.blog-body { padding: 16px; }
+.blog-body h4 { font-size: 15px; color: #333; margin-bottom: 6px; line-height: 1.4; }
+.blog-body p { font-size: 13px; color: #888; line-height: 1.5; }
+.blog-date { font-size: 11px; color: #aaa; margin-top: 8px; }
+
+/* Stats Bar */
+.stats-bar { background: #fff; border-bottom: 1px solid #eee; padding: 16px 20px; }
+.stats-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: center; gap: 48px; }
+.stat-item { text-align: center; }
+.stat-num { font-size: 24px; font-weight: 800; color: #499cd7; }
+.stat-label { font-size: 12px; color: #999; margin-top: 2px; }
+
+/* Country Filter */
+.filter-row { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
+.filter-select { padding: 8px 16px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; color: #555; background: #fff; cursor: pointer; outline: none; }
+.filter-select:focus { border-color: #499cd7; }
+
+/* Responsive */
+@media (max-width: 768px) {
+  .pricing { grid-template-columns: 1fr; }
+  .hero h1 { font-size: 26px; }
+  nav { display: none; }
+  .cat-grid { grid-template-columns: 1fr; }
+  .ad-grid { grid-template-columns: 1fr; }
+  .stats-inner { gap: 20px; flex-wrap: wrap; }
+  .blog-grid { grid-template-columns: 1fr; }
+  .startup-desc { max-width: 160px; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <a href="#" class="logo">Startup<span>Finder</span></a>
+    <nav>
+      <a href="about.html">소개</a>
+      <a href="how-it-works.html">작동 원리</a>
+      <a href="#ranking">랭킹</a>
+      <a href="countries.html">국가별</a>
+      <a href="#directories">디렉토리</a>
+      <a href="faster-approval.html">빠른 승인</a>
+      <a href="booster.html">부스터</a>
+      <a href="premium-profile.html">프리미엄</a>
+      <a href="advertising.html">광고</a>
+      <a href="blog.html">블로그</a>
+      <a href="create.html">스타트업 등록</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero" id="about">
+  <h1>스타트업 디렉토리 리스트</h1>
+  <p>전 세계 스타트업을 발견하고, 순위를 매기고, 분석하세요. 매일 업데이트되는 랭킹 데이터로 스타트업 생태계를 한눈에 파악할 수 있습니다.</p>
+  <div style="margin-top:24px; display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
+    <a href="create.html" class="btn btn-white">스타트업 등록</a>
+    <a href="#ranking" class="btn" style="border:2px solid #fff; background:transparent;">랭킹 보기</a>
+  </div>
+</section>
+
+<!-- Stats Bar -->
+<div class="stats-bar">
+  <div class="stats-inner">
+    <div class="stat-item"><div class="stat-num">152,340</div><div class="stat-label">등록 스타트업</div></div>
+    <div class="stat-item"><div class="stat-num">195</div><div class="stat-label">국가</div></div>
+    <div class="stat-item"><div class="stat-num">14시간 전</div><div class="stat-label">마지막 랭킹 업데이트</div></div>
+    <div class="stat-item"><div class="stat-num">2,847</div><div class="stat-label">이번 주 신규</div></div>
+  </div>
+</div>
+
+<!-- Ad Carousel -->
+<div class="ad-carousel">
+  <div class="ad-grid" style="margin-top:30px;">
+    <div class="ad-card">
+      <div class="ad-label">추천 스타트업</div>
+      <h4>SeoForge.ai</h4>
+      <p>AI 기반 SEO 자동화 도구. 콘텐츠 최적화부터 키워드 분석까지 한 번에.</p>
+      <a href="#" class="ad-link">자세히 보기 &rarr;</a>
+    </div>
+    <div class="ad-card">
+      <div class="ad-label">추천 스타트업</div>
+      <h4>Electe</h4>
+      <p>스마트 에너지 관리 플랫폼. 기업과 가정의 에너지 효율을 극대화합니다.</p>
+      <a href="#" class="ad-link">자세히 보기 &rarr;</a>
+    </div>
+    <div class="ad-card" style="border-left-color:#ff6b6b;">
+      <div class="ad-label">SF 부스터</div>
+      <h4>SF Booster</h4>
+      <p>120+ 디렉토리에 자동 제출하여 스타트업의 온라인 가시성을 극대화하세요.</p>
+      <a href="#directories" class="ad-link">디렉토리 보기 &rarr;</a>
+    </div>
+  </div>
+</div>
+
+<!-- Top Startups Ranking -->
+<div class="ranking-section" id="ranking">
+  <h2>글로벌 스타트업 랭킹 TOP 10</h2>
+  <p class="subtitle">SF Score 기반 전 세계 스타트업 순위</p>
+  <div class="filter-row">
+    <select class="filter-select">
+      <option>전체 국가</option>
+      <option>미국</option>
+      <option>영국</option>
+      <option>한국</option>
+      <option>일본</option>
+      <option>독일</option>
+      <option>인도</option>
+    </select>
+    <select class="filter-select">
+      <option>전체 카테고리</option>
+      <option>AI / 머신러닝</option>
+      <option>핀테크</option>
+      <option>SaaS</option>
+      <option>이커머스</option>
+      <option>헬스케어</option>
+    </select>
+  </div>
+  <div class="table-wrap">
+    <table class="rank-table">
+      <thead>
+        <tr><th>순위</th><th>스타트업</th><th>SF Score</th><th>국가</th><th>국가 순위</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="rank-num rank-1">1</td>
+          <td><div class="startup-info"><div class="startup-logo">O</div><div><div class="startup-name">OpenAI</div><div class="startup-desc">AI 연구 및 배포를 선도하는 기업</div></div></div></td>
+          <td><div class="sr-score">88,599</div><div class="sr-score-bar"><div class="sr-score-fill" style="width:100%"></div></div></td>
+          <td><span class="country-badge"><span class="country-flag">🇺🇸</span> 미국</span></td>
+          <td class="country-rank">#1</td>
+        </tr>
+        <tr>
+          <td class="rank-num rank-2">2</td>
+          <td><div class="startup-info"><div class="startup-logo">R</div><div><div class="startup-name">Revolut</div><div class="startup-desc">글로벌 핀테크 슈퍼앱</div></div></div></td>
+          <td><div class="sr-score">86,372</div><div class="sr-score-bar"><div class="sr-score-fill" style="width:95%"></div></div></td>
+          <td><span class="country-badge"><span class="country-flag">🇬🇧</span> 영국</span></td>
+          <td class="country-rank">#1</td>
+        </tr>
+        <tr>
+          <td class="rank-num rank-3">3</td>
+          <td><div class="startup-info"><div class="startup-logo">P</div><div><div class="startup-name">pCloud</div><div class="startup-desc">보안 클라우드 스토리지 서비스</div></div></div></td>
+          <td><div class="sr-score">86,179</div><div class="sr-score-bar"><div class="sr-score-fill" style="width:94%"></div></div></td>
+          <td><span class="country-badge"><span class="country-flag">🇧🇬</span> 불가리아</span></td>
+          <td class="country-rank">#1</td>
+        </tr>
+        <tr>
+          <td class="rank-num">4</td>
+          <td><div class="startup-info"><div class="startup-logo">G</div><div><div class="startup-name">Grammarly</div><div class="startup-desc">AI 기반 글쓰기 어시스턴트</div></div></div></td>
+          <td><div class="sr-score">85,921</div><div class="sr-score-bar"><div class="sr-score-fill" style="width:93%"></div></div></td>
+          <td><span class="country-badge"><span class="country-flag">🇺🇸</span> 미국</span></td>
+          <td class="country-rank">#2</td>
+        </tr>
+        <tr>
+          <td class="rank-num">5</td>
+          <td><div class="startup-info"><div class="startup-logo">N</div><div><div class="startup-name">Notion</div><div class="startup-desc">올인원 워크스페이스 플랫폼</div></div></div></td>
+          <td><div class="sr-score">85,743</div><div class="sr-score-bar"><div class="sr-score-fill" style="width:92%"></div></div></td>
+          <td><span class="country-badge"><span class="country-flag">🇺🇸</span> 미국</span></td>
+          <td class="country-rank">#3</td>
+        </tr>
+        <tr>
+          <td class="rank-num">6</td>
+          <td><div class="startup-info"><div class="startup-logo">C</div><div><div class="startup-name">Canva</div><div class="startup-desc">온라인 디자인 및 퍼블리싱 플랫폼</div></div></div></td>
+          <td><div class="sr-score">85,502</div><div class="sr-score-bar"><div class="sr-score-fill" style="width:91%"></div></div></td>
+          <td><span class="country-badge"><span class="country-flag">🇦🇺</span> 호주</span></td>
+          <td class="country-rank">#1</td>
+        </tr>
+        <tr>
+          <td class="rank-num">7</td>
+          <td><div class="startup-info"><div class="startup-logo">F</div><div><div class="startup-name">Figma</div><div class="startup-desc">협업 인터페이스 디자인 도구</div></div></div></td>
+          <td><div class="sr-score">85,188</div><div class="sr-score-bar"><div class="sr-score-fill" style="width:90%"></div></div></td>
+          <td><span class="country-badge"><span class="country-flag">🇺🇸</span> 미국</span></td>
+          <td class="country-rank">#4</td>
+        </tr>
+        <tr>
+          <td class="rank-num">8</td>
+          <td><div class="startup-info"><div class="startup-logo">S</div><div><div class="startup-name">Stripe</div><div class="startup-desc">온라인 결제 인프라 플랫폼</div></div></div></td>
+          <td><div class="sr-score">84,976</div><div class="sr-score-bar"><div class="sr-score-fill" style="width:89%"></div></div></td>
+          <td><span class="country-badge"><span class="country-flag">🇺🇸</span> 미국</span></td>
+          <td class="country-rank">#5</td>
+        </tr>
+        <tr>
+          <td class="rank-num">9</td>
+          <td><div class="startup-info"><div class="startup-logo">V</div><div><div class="startup-name">Vercel</div><div class="startup-desc">프론트엔드 클라우드 플랫폼</div></div></div></td>
+          <td><div class="sr-score">84,710</div><div class="sr-score-bar"><div class="sr-score-fill" style="width:88%"></div></div></td>
+          <td><span class="country-badge"><span class="country-flag">🇺🇸</span> 미국</span></td>
+          <td class="country-rank">#6</td>
+        </tr>
+        <tr>
+          <td class="rank-num">10</td>
+          <td><div class="startup-info"><div class="startup-logo">D</div><div><div class="startup-name">Discord</div><div class="startup-desc">커뮤니티를 위한 커뮤니케이션 플랫폼</div></div></div></td>
+          <td><div class="sr-score">84,489</div><div class="sr-score-bar"><div class="sr-score-fill" style="width:87%"></div></div></td>
+          <td><span class="country-badge"><span class="country-flag">🇺🇸</span> 미국</span></td>
+          <td class="country-rank">#7</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="view-all"><a href="#" class="btn btn-outline">전체 랭킹 보기</a></div>
+</div>
+
+<!-- New Startups -->
+<div class="ranking-section">
+  <h2>신규 등록 스타트업</h2>
+  <p class="subtitle">최근 승인된 스타트업 목록</p>
+  <div class="table-wrap">
+    <table class="rank-table">
+      <thead>
+        <tr><th>스타트업</th><th>설명</th><th>국가</th><th>등록일</th><th>상태</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><div class="startup-info"><div class="startup-logo" style="background:#e3f2fd;">A</div><div><div class="startup-name">AiPromptKit</div></div></div></td>
+          <td style="color:#777; font-size:13px;">AI 프롬프트 관리 및 공유 플랫폼</td>
+          <td><span class="country-badge"><span class="country-flag">🇰🇷</span> 한국</span></td>
+          <td class="days-ago">1일 전</td>
+          <td><span class="new-badge">NEW</span></td>
+        </tr>
+        <tr>
+          <td><div class="startup-info"><div class="startup-logo" style="background:#fce4ec;">M</div><div><div class="startup-name">MediTrack</div></div></div></td>
+          <td style="color:#777; font-size:13px;">개인 건강 기록 관리 앱</td>
+          <td><span class="country-badge"><span class="country-flag">🇺🇸</span> 미국</span></td>
+          <td class="days-ago">2일 전</td>
+          <td><span class="new-badge">NEW</span></td>
+        </tr>
+        <tr>
+          <td><div class="startup-info"><div class="startup-logo" style="background:#e8f5e9;">F</div><div><div class="startup-name">FinLens</div></div></div></td>
+          <td style="color:#777; font-size:13px;">소상공인 재무 분석 대시보드</td>
+          <td><span class="country-badge"><span class="country-flag">🇩🇪</span> 독일</span></td>
+          <td class="days-ago">3일 전</td>
+          <td><span class="new-badge">NEW</span></td>
+        </tr>
+        <tr>
+          <td><div class="startup-info"><div class="startup-logo" style="background:#fff8e1;">C</div><div><div class="startup-name">CodeReviewBot</div></div></div></td>
+          <td style="color:#777; font-size:13px;">AI 코드 리뷰 자동화 도구</td>
+          <td><span class="country-badge"><span class="country-flag">🇬🇧</span> 영국</span></td>
+          <td class="days-ago">4일 전</td>
+          <td><span class="new-badge">NEW</span></td>
+        </tr>
+        <tr>
+          <td><div class="startup-info"><div class="startup-logo" style="background:#f3e5f5;">D</div><div><div class="startup-name">DeliverEase</div></div></div></td>
+          <td style="color:#777; font-size:13px;">라스트마일 배송 최적화 플랫폼</td>
+          <td><span class="country-badge"><span class="country-flag">🇯🇵</span> 일본</span></td>
+          <td class="days-ago">5일 전</td>
+          <td><span class="new-badge">NEW</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Blog Preview -->
+<div class="blog-section">
+  <h2>블로그</h2>
+  <div class="blog-grid">
+    <div class="blog-card">
+      <div class="blog-thumb" style="background:linear-gradient(135deg,#667eea,#764ba2);">📈</div>
+      <div class="blog-body">
+        <h4>2026년 스타트업 트렌드: AI가 바꾸는 산업 지형</h4>
+        <p>올해 가장 주목해야 할 스타트업 트렌드와 AI 기술이 각 산업에 미치는 영향을 분석합니다.</p>
+        <div class="blog-date">2026년 1월 28일</div>
+      </div>
+    </div>
+    <div class="blog-card">
+      <div class="blog-thumb" style="background:linear-gradient(135deg,#f093fb,#f5576c);">🏗️</div>
+      <div class="blog-body">
+        <h4>스타트업 인프라 구축 가이드: 클라우드부터 CI/CD까지</h4>
+        <p>초기 스타트업이 알아야 할 기술 인프라 구축의 핵심 요소를 정리합니다.</p>
+        <div class="blog-date">2026년 1월 22일</div>
+      </div>
+    </div>
+    <div class="blog-card">
+      <div class="blog-thumb" style="background:linear-gradient(135deg,#4facfe,#00f2fe);">🎓</div>
+      <div class="blog-body">
+        <h4>성공적인 스타트업 리더보드 설계 원칙</h4>
+        <p>사용자 참여를 높이는 리더보드와 랭킹 시스템 디자인의 핵심 원칙을 소개합니다.</p>
+        <div class="blog-date">2026년 1월 15일</div>
+      </div>
+    </div>
+    <div class="blog-card">
+      <div class="blog-thumb" style="background:linear-gradient(135deg,#43e97b,#38f9d7);">💡</div>
+      <div class="blog-body">
+        <h4>스타트업 SEO 전략: 백링크 확보의 모든 것</h4>
+        <p>디렉토리 제출부터 콘텐츠 마케팅까지, 스타트업이 활용할 수 있는 SEO 전략을 알아봅니다.</p>
+        <div class="blog-date">2026년 1월 8일</div>
+      </div>
+    </div>
+  </div>
+  <div class="view-all" style="margin-top:20px;"><a href="blog.html" class="btn btn-outline">블로그 전체 보기</a></div>
+</div>
+
+<div class="pricing" id="pricing">
+  <div class="plan">
+    <h3>베이직</h3>
+    <div class="count">30+ <span>디렉토리</span></div>
+    <p class="desc">기본적인 백링크 확보에 적합<br>높은 DR 디렉토리 포함</p>
+    <a href="#" class="btn btn-outline">시작하기</a>
+  </div>
+  <div class="plan featured">
+    <h3>전문가</h3>
+    <div class="count">60+ <span>디렉토리</span></div>
+    <p class="desc">전문적인 SEO 전략에 최적<br>카테고리별 디렉토리 포함</p>
+    <a href="#" class="btn">시작하기</a>
+  </div>
+  <div class="plan">
+    <h3>얼티밋</h3>
+    <div class="count">120+ <span>디렉토리</span></div>
+    <p class="desc">최대 커버리지를 위한 플랜<br>전체 디렉토리 액세스</p>
+    <a href="#" class="btn btn-outline">시작하기</a>
+  </div>
+</div>
+
+<div class="section" id="directories">
+  <h2>상위 디렉토리 목록</h2>
+  <p class="subtitle">도메인 권위, 트래픽, 링크 유형 등 핵심 지표를 한눈에 확인하세요.</p>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>디렉토리</th>
+          <th>설명</th>
+          <th>DR</th>
+          <th>DA</th>
+          <th>스팸 점수</th>
+          <th>링크 유형</th>
+          <th>트래픽</th>
+          <th>승인 속도</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td class="dir-name">Product Hunt</td>
+          <td>신제품 발견 및 공유 플랫폼</td>
+          <td><span class="metric">93</span><span class="metric-bar"><span class="metric-fill" style="width:93%"></span></span></td>
+          <td><span class="metric">91</span></td>
+          <td class="spam-low">1%</td>
+          <td><span class="badge badge-do">Do-Follow</span></td>
+          <td><span class="badge badge-high">높음</span></td>
+          <td>1~3일</td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td class="dir-name">Crunchbase</td>
+          <td>기업 정보 및 투자 데이터 플랫폼</td>
+          <td><span class="metric">91</span><span class="metric-bar"><span class="metric-fill" style="width:91%"></span></span></td>
+          <td><span class="metric">92</span></td>
+          <td class="spam-low">1%</td>
+          <td><span class="badge badge-no">No-Follow</span></td>
+          <td><span class="badge badge-high">높음</span></td>
+          <td>즉시</td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td class="dir-name">AngelList</td>
+          <td>스타트업 채용 및 투자 플랫폼</td>
+          <td><span class="metric">91</span><span class="metric-bar"><span class="metric-fill" style="width:91%"></span></span></td>
+          <td><span class="metric">90</span></td>
+          <td class="spam-low">1%</td>
+          <td><span class="badge badge-do">Do-Follow</span></td>
+          <td><span class="badge badge-high">높음</span></td>
+          <td>즉시</td>
+        </tr>
+        <tr>
+          <td>4</td>
+          <td class="dir-name">G2</td>
+          <td>소프트웨어 리뷰 및 비교 플랫폼</td>
+          <td><span class="metric">89</span><span class="metric-bar"><span class="metric-fill" style="width:89%"></span></span></td>
+          <td><span class="metric">88</span></td>
+          <td class="spam-low">2%</td>
+          <td><span class="badge badge-do">Do-Follow</span></td>
+          <td><span class="badge badge-high">높음</span></td>
+          <td>3~5일</td>
+        </tr>
+        <tr>
+          <td>5</td>
+          <td class="dir-name">Capterra</td>
+          <td>비즈니스 소프트웨어 검색 플랫폼</td>
+          <td><span class="metric">88</span><span class="metric-bar"><span class="metric-fill" style="width:88%"></span></span></td>
+          <td><span class="metric">87</span></td>
+          <td class="spam-low">1%</td>
+          <td><span class="badge badge-do">Do-Follow</span></td>
+          <td><span class="badge badge-high">높음</span></td>
+          <td>3~7일</td>
+        </tr>
+        <tr>
+          <td>6</td>
+          <td class="dir-name">Medium</td>
+          <td>글로벌 퍼블리싱 및 블로그 플랫폼</td>
+          <td><span class="metric">94</span><span class="metric-bar"><span class="metric-fill" style="width:94%"></span></span></td>
+          <td><span class="metric">95</span></td>
+          <td class="spam-low">1%</td>
+          <td><span class="badge badge-no">No-Follow</span></td>
+          <td><span class="badge badge-high">높음</span></td>
+          <td>즉시</td>
+        </tr>
+        <tr>
+          <td>7</td>
+          <td class="dir-name">BetaList</td>
+          <td>초기 스타트업 발견 플랫폼</td>
+          <td><span class="metric">72</span><span class="metric-bar"><span class="metric-fill" style="width:72%"></span></span></td>
+          <td><span class="metric">60</span></td>
+          <td class="spam-low">3%</td>
+          <td><span class="badge badge-do">Do-Follow</span></td>
+          <td><span class="badge badge-mid">중간</span></td>
+          <td>1~2주</td>
+        </tr>
+        <tr>
+          <td>8</td>
+          <td class="dir-name">SaaSHub</td>
+          <td>SaaS 대안 비교 플랫폼</td>
+          <td><span class="metric">70</span><span class="metric-bar"><span class="metric-fill" style="width:70%"></span></span></td>
+          <td><span class="metric">56</span></td>
+          <td class="spam-low">2%</td>
+          <td><span class="badge badge-do">Do-Follow</span></td>
+          <td><span class="badge badge-mid">중간</span></td>
+          <td>3~5일</td>
+        </tr>
+        <tr>
+          <td>9</td>
+          <td class="dir-name">AlternativeTo</td>
+          <td>소프트웨어 대안 추천 플랫폼</td>
+          <td><span class="metric">80</span><span class="metric-bar"><span class="metric-fill" style="width:80%"></span></span></td>
+          <td><span class="metric">73</span></td>
+          <td class="spam-low">1%</td>
+          <td><span class="badge badge-do">Do-Follow</span></td>
+          <td><span class="badge badge-high">높음</span></td>
+          <td>즉시</td>
+        </tr>
+        <tr>
+          <td>10</td>
+          <td class="dir-name">Indie Hackers</td>
+          <td>인디 메이커 커뮤니티 및 쇼케이스</td>
+          <td><span class="metric">74</span><span class="metric-bar"><span class="metric-fill" style="width:74%"></span></span></td>
+          <td><span class="metric">63</span></td>
+          <td class="spam-low">2%</td>
+          <td><span class="badge badge-do">Do-Follow</span></td>
+          <td><span class="badge badge-mid">중간</span></td>
+          <td>즉시</td>
+        </tr>
+        <tr>
+          <td>11</td>
+          <td class="dir-name">Slant</td>
+          <td>제품 추천 및 비교 플랫폼</td>
+          <td><span class="metric">69</span><span class="metric-bar"><span class="metric-fill" style="width:69%"></span></span></td>
+          <td><span class="metric">62</span></td>
+          <td class="spam-low">2%</td>
+          <td><span class="badge badge-do">Do-Follow</span></td>
+          <td><span class="badge badge-mid">중간</span></td>
+          <td>즉시</td>
+        </tr>
+        <tr>
+          <td>12</td>
+          <td class="dir-name">Launching Next</td>
+          <td>신규 스타트업 디스커버리 플랫폼</td>
+          <td><span class="metric">55</span><span class="metric-bar"><span class="metric-fill" style="width:55%"></span></span></td>
+          <td><span class="metric">42</span></td>
+          <td class="spam-low">3%</td>
+          <td><span class="badge badge-do">Do-Follow</span></td>
+          <td><span class="badge badge-low">낮음</span></td>
+          <td>3~7일</td>
+        </tr>
+        <tr>
+          <td>13</td>
+          <td class="dir-name">StartupStash</td>
+          <td>스타트업 도구 및 리소스 큐레이션</td>
+          <td><span class="metric">62</span><span class="metric-bar"><span class="metric-fill" style="width:62%"></span></span></td>
+          <td><span class="metric">50</span></td>
+          <td class="spam-low">2%</td>
+          <td><span class="badge badge-do">Do-Follow</span></td>
+          <td><span class="badge badge-mid">중간</span></td>
+          <td>1~2주</td>
+        </tr>
+        <tr>
+          <td>14</td>
+          <td class="dir-name">F6S</td>
+          <td>스타트업 펀딩 및 프로그램 플랫폼</td>
+          <td><span class="metric">73</span><span class="metric-bar"><span class="metric-fill" style="width:73%"></span></span></td>
+          <td><span class="metric">65</span></td>
+          <td class="spam-low">1%</td>
+          <td><span class="badge badge-do">Do-Follow</span></td>
+          <td><span class="badge badge-mid">중간</span></td>
+          <td>즉시</td>
+        </tr>
+        <tr>
+          <td>15</td>
+          <td class="dir-name">Killerstartups</td>
+          <td>스타트업 리뷰 및 소개 플랫폼</td>
+          <td><span class="metric">58</span><span class="metric-bar"><span class="metric-fill" style="width:58%"></span></span></td>
+          <td><span class="metric">45</span></td>
+          <td class="spam-mid">5%</td>
+          <td><span class="badge badge-do">Do-Follow</span></td>
+          <td><span class="badge badge-low">낮음</span></td>
+          <td>1~2주</td>
+        </tr>
+
+        <!-- Blurred/locked rows -->
+        <tr class="lock-row">
+          <td>16</td>
+          <td class="dir-name">██████████</td>
+          <td>██████████ ██████</td>
+          <td><span class="metric">76</span></td>
+          <td><span class="metric">68</span></td>
+          <td>3%</td>
+          <td><span class="badge badge-do">Do-Follow</span></td>
+          <td><span class="badge badge-mid">중간</span></td>
+          <td>3~5일</td>
+        </tr>
+        <tr class="lock-row">
+          <td>17</td>
+          <td class="dir-name">██████████</td>
+          <td>██████████ ██████</td>
+          <td><span class="metric">81</span></td>
+          <td><span class="metric">72</span></td>
+          <td>1%</td>
+          <td><span class="badge badge-do">Do-Follow</span></td>
+          <td><span class="badge badge-high">높음</span></td>
+          <td>즉시</td>
+        </tr>
+        <tr class="lock-row">
+          <td>18</td>
+          <td class="dir-name">██████████</td>
+          <td>██████████ ██████</td>
+          <td><span class="metric">65</span></td>
+          <td><span class="metric">58</span></td>
+          <td>2%</td>
+          <td><span class="badge badge-no">No-Follow</span></td>
+          <td><span class="badge badge-mid">중간</span></td>
+          <td>1~3일</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="lock-banner">
+    <p style="color:#777; margin-bottom:16px; font-size:15px;">나머지 105+ 디렉토리를 확인하려면 플랜을 구독하세요</p>
+    <a href="#pricing" class="btn">전체 목록 보기</a>
+  </div>
+</div>
+
+<div class="categories" id="categories">
+  <h2 style="font-size:24px; margin-bottom:8px;">카테고리별 디렉토리</h2>
+  <p style="color:#777; margin-bottom:24px; font-size:15px;">스타트업 유형에 맞는 전문 디렉토리를 찾아보세요.</p>
+  <div class="cat-grid">
+    <div class="cat-card">
+      <h4>🚀 신규 런칭 전용</h4>
+      <p>막 출시된 스타트업만 등록 가능한 디렉토리. 얼리 어답터 확보에 효과적.</p>
+      <div class="cat-count">12개 디렉토리</div>
+    </div>
+    <div class="cat-card">
+      <h4>💻 SaaS / 소프트웨어</h4>
+      <p>SaaS 및 소프트웨어 제품 전용 디렉토리. B2B, B2C 모두 포함.</p>
+      <div class="cat-count">18개 디렉토리</div>
+    </div>
+    <div class="cat-card">
+      <h4>🤖 AI / 머신러닝</h4>
+      <p>AI 도구 및 머신러닝 기반 서비스 전문 디렉토리.</p>
+      <div class="cat-count">15개 디렉토리</div>
+    </div>
+    <div class="cat-card">
+      <h4>🎨 디자인 / 크리에이티브</h4>
+      <p>디자인 도구, 크리에이티브 서비스 관련 스타트업 전용.</p>
+      <div class="cat-count">8개 디렉토리</div>
+    </div>
+    <div class="cat-card">
+      <h4>📱 모바일 앱</h4>
+      <p>iOS, Android 앱 전용 디렉토리. 앱스토어 외 추가 노출.</p>
+      <div class="cat-count">10개 디렉토리</div>
+    </div>
+    <div class="cat-card">
+      <h4>🏥 헬스케어 / 웰니스</h4>
+      <p>건강, 의료, 웰니스 분야 스타트업 전문 디렉토리.</p>
+      <div class="cat-count">6개 디렉토리</div>
+    </div>
+    <div class="cat-card">
+      <h4>💰 핀테크 / 금융</h4>
+      <p>핀테크, 금융 서비스, 결제 플랫폼 전용 디렉토리.</p>
+      <div class="cat-count">9개 디렉토리</div>
+    </div>
+    <div class="cat-card">
+      <h4>🌍 지역 특화</h4>
+      <p>미국, EU, 아시아 등 특정 지역 스타트업만 등록 가능.</p>
+      <div class="cat-count">14개 디렉토리</div>
+    </div>
+  </div>
+</div>
+
+<section class="cta">
+  <h2>스타트업을 세상에 알리세요</h2>
+  <p>120+ 디렉토리에 제출하여 SEO 백링크를 확보하고 온라인 가시성을 극대화하세요.</p>
+  <a href="#pricing" class="btn btn-white">지금 시작하기</a>
+</section>
+
+<footer>
+  <div class="links">
+    <a href="#">이용약관</a>
+    <a href="#">개인정보처리방침</a>
+    <a href="#">FAQ</a>
+    <a href="#">문의하기</a>
+  </div>
+  <p class="copy">&copy; 2026 StartupFinder. All rights reserved.</p>
+  <div style="margin-top:20px;"><a href="admin.html" style="display:inline-block; padding:8px 20px; background:#e53935; color:#fff; font-size:13px; font-weight:600; text-decoration:none; border-radius:6px; transition:background .2s;" onmouseover="this.style.background='#c62828'" onmouseout="this.style.background='#e53935'">🔒 관리자 대시보드</a></div>
+</footer>
+
+</body>
+</html>
+

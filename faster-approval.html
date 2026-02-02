@@ -1,0 +1,177 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>빠른 승인 - StartupFinder</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif; color: #333; background: #f5f7fa; }
+header { background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.08); position: sticky; top: 0; z-index: 100; }
+.header-inner { max-width: 1200px; margin: 0 auto; padding: 0 20px; display: flex; align-items: center; justify-content: space-between; height: 64px; }
+.logo { font-size: 22px; font-weight: 700; color: #499cd7; text-decoration: none; }
+.logo span { color: #333; }
+nav a { text-decoration: none; color: #555; margin-left: 28px; font-size: 15px; font-weight: 500; transition: color .2s; }
+nav a:hover { color: #499cd7; }
+.page-hero { background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%); color: #fff; text-align: center; padding: 60px 20px 50px; }
+.page-hero h1 { font-size: 36px; margin-bottom: 12px; }
+.page-hero p { opacity: .9; font-size: 17px; max-width: 600px; margin: 0 auto; line-height: 1.7; }
+.container { max-width: 1000px; margin: 0 auto; padding: 40px 20px; }
+.btn { display: inline-block; padding: 14px 36px; background: #ff9800; color: #fff; border-radius: 8px; text-decoration: none; font-weight: 700; font-size: 16px; transition: background .2s; }
+.btn:hover { background: #e68900; }
+
+/* Features */
+.features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-bottom: 50px; }
+.feature { background: #fff; border-radius: 12px; padding: 32px 24px; text-align: center; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+.feature-icon { font-size: 40px; margin-bottom: 16px; }
+.feature h3 { font-size: 17px; margin-bottom: 8px; }
+.feature p { font-size: 14px; color: #777; line-height: 1.6; }
+
+/* How it works */
+.how { margin-bottom: 50px; }
+.how h2 { font-size: 24px; text-align: center; margin-bottom: 32px; }
+.steps { display: flex; gap: 24px; }
+.step-card { flex: 1; background: #fff; border-radius: 12px; padding: 28px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); position: relative; }
+.step-num { position: absolute; top: -14px; left: 20px; width: 32px; height: 32px; background: #ff9800; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; }
+.step-card h4 { font-size: 16px; margin-bottom: 8px; margin-top: 8px; }
+.step-card p { font-size: 13px; color: #777; line-height: 1.6; }
+
+/* Pricing */
+.price-section { text-align: center; margin-bottom: 50px; }
+.price-section h2 { font-size: 24px; margin-bottom: 32px; }
+.price-cards { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; max-width: 700px; margin: 0 auto; }
+.price-card { background: #fff; border-radius: 12px; padding: 36px 28px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+.price-card.pop { border: 2px solid #ff9800; }
+.price-card h3 { font-size: 18px; color: #ff9800; margin-bottom: 8px; }
+.price-amount { font-size: 36px; font-weight: 800; color: #333; margin-bottom: 4px; }
+.price-amount span { font-size: 14px; color: #999; font-weight: 400; }
+.price-desc { color: #777; font-size: 13px; margin-bottom: 20px; }
+.price-features { list-style: none; text-align: left; margin-bottom: 24px; }
+.price-features li { padding: 6px 0; font-size: 14px; color: #555; }
+.price-features li::before { content: '✓ '; color: #ff9800; font-weight: 700; }
+
+/* FAQ */
+.faq { margin-bottom: 50px; }
+.faq h2 { font-size: 24px; text-align: center; margin-bottom: 24px; }
+.faq-item { background: #fff; border-radius: 8px; padding: 20px 24px; margin-bottom: 12px; box-shadow: 0 1px 6px rgba(0,0,0,0.04); }
+.faq-item h4 { font-size: 15px; margin-bottom: 8px; color: #333; }
+.faq-item p { font-size: 14px; color: #777; line-height: 1.6; }
+
+footer { background: #1a2332; color: #aab; padding: 40px 20px; text-align: center; }
+footer .links a { color: #8899aa; text-decoration: none; margin: 0 12px; font-size: 14px; }
+footer .copy { font-size: 13px; color: #556; margin-top: 16px; }
+@media (max-width: 768px) { nav { display: none; } .features, .steps, .price-cards { grid-template-columns: 1fr; } .steps { flex-direction: column; } }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <a href="index.html" class="logo">Startup<span>Finder</span></a>
+        <nav>
+      <a href="about.html">소개</a>
+      <a href="how-it-works.html">작동 원리</a>
+      <a href="index.html#ranking">랭킹</a>
+      <a href="countries.html">국가별</a>
+      <a href="index.html#directories">디렉토리</a>
+      <a href="faster-approval.html">빠른 승인</a>
+      <a href="booster.html">부스터</a>
+      <a href="premium-profile.html">프리미엄</a>
+      <a href="advertising.html">광고</a>
+      <a href="blog.html">블로그</a>
+      <a href="create.html">스타트업 등록</a>
+    </nav>
+  </div>
+</header>
+
+<div class="page-hero">
+  <h1>SF 빠른 승인</h1>
+  <p>스타트업 등록 검토를 우선 처리하여 빠르게 랭킹에 참여하세요. 일반 대기열을 건너뛰고 24시간 내 승인을 보장합니다.</p>
+</div>
+
+<div class="container">
+
+  <div class="features">
+    <div class="feature">
+      <div class="feature-icon">⚡</div>
+      <h3>24시간 내 승인</h3>
+      <p>일반 등록 대비 최대 7배 빠른 검토. 제출 후 24시간 내 결과를 확인하세요.</p>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">👨‍💼</div>
+      <h3>전담 검토자 배정</h3>
+      <p>전담 검토자가 직접 스타트업 정보를 확인하고 피드백을 제공합니다.</p>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">🔄</div>
+      <h3>수정 요청 우선 처리</h3>
+      <p>보완이 필요한 경우에도 수정 후 즉시 재검토가 진행됩니다.</p>
+    </div>
+  </div>
+
+  <div class="how">
+    <h2>이용 방법</h2>
+    <div class="steps">
+      <div class="step-card"><div class="step-num">1</div><h4>스타트업 등록</h4><p>일반 등록 절차대로 스타트업 정보를 입력합니다.</p></div>
+      <div class="step-card"><div class="step-num">2</div><h4>빠른 승인 선택</h4><p>결제 단계에서 빠른 승인 옵션을 선택합니다.</p></div>
+      <div class="step-card"><div class="step-num">3</div><h4>우선 검토</h4><p>전담 검토자가 24시간 내에 스타트업을 검토합니다.</p></div>
+      <div class="step-card"><div class="step-num">4</div><h4>랭킹 등록</h4><p>승인 즉시 글로벌 랭킹에 반영됩니다.</p></div>
+    </div>
+  </div>
+
+  <div class="price-section">
+    <h2>가격</h2>
+    <div class="price-cards">
+      <div class="price-card">
+        <h3>스탠다드</h3>
+        <div class="price-amount">$29 <span>/ 1회</span></div>
+        <p class="price-desc">기본 빠른 승인 서비스</p>
+        <ul class="price-features">
+          <li>48시간 내 승인</li>
+          <li>기본 검토 피드백</li>
+          <li>1회 수정 요청 가능</li>
+        </ul>
+        <a href="create.html" class="btn" style="background:#555;">선택하기</a>
+      </div>
+      <div class="price-card pop">
+        <h3>프리미엄</h3>
+        <div class="price-amount">$49 <span>/ 1회</span></div>
+        <p class="price-desc">최우선 검토 + 프로필 최적화</p>
+        <ul class="price-features">
+          <li>24시간 내 승인 보장</li>
+          <li>상세 검토 피드백</li>
+          <li>무제한 수정 요청</li>
+          <li>프로필 SEO 최적화 팁</li>
+        </ul>
+        <a href="create.html" class="btn">선택하기</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="faq">
+    <h2>자주 묻는 질문</h2>
+    <div class="faq-item">
+      <h4>승인이 거부될 수도 있나요?</h4>
+      <p>빠른 승인은 검토 속도를 보장하지만, 품질 기준을 충족하지 못하면 거부될 수 있습니다. 이 경우 수정 후 무료 재검토가 가능합니다.</p>
+    </div>
+    <div class="faq-item">
+      <h4>일반 등록과 차이는 무엇인가요?</h4>
+      <p>일반 등록은 1~7일의 대기 기간이 있으며, 빠른 승인은 전담 검토자가 우선적으로 처리합니다.</p>
+    </div>
+    <div class="faq-item">
+      <h4>환불이 가능한가요?</h4>
+      <p>검토 시작 전이라면 전액 환불이 가능합니다. 검토 완료 후에는 환불이 불가합니다.</p>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <div class="links"><a href="index.html">홈</a><a href="#">이용약관</a><a href="#">개인정보처리방침</a><a href="#">FAQ</a></div>
+  <p class="copy">&copy; 2026 StartupFinder. All rights reserved.</p>
+  <div style="margin-top:20px;"><a href="admin.html" style="display:inline-block; padding:8px 20px; background:#e53935; color:#fff; font-size:13px; font-weight:600; text-decoration:none; border-radius:6px; transition:background .2s;" onmouseover="this.style.background='#c62828'" onmouseout="this.style.background='#e53935'">🔒 관리자 대시보드</a></div>
+</footer>
+
+</body>
+</html>
+

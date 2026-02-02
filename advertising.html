@@ -1,0 +1,175 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>광고 - StartupFinder</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif; color: #333; background: #f5f7fa; }
+header { background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.08); position: sticky; top: 0; z-index: 100; }
+.header-inner { max-width: 1200px; margin: 0 auto; padding: 0 20px; display: flex; align-items: center; justify-content: space-between; height: 64px; }
+.logo { font-size: 22px; font-weight: 700; color: #499cd7; text-decoration: none; }
+.logo span { color: #333; }
+nav a { text-decoration: none; color: #555; margin-left: 28px; font-size: 15px; font-weight: 500; transition: color .2s; }
+nav a:hover { color: #499cd7; }
+.page-hero { background: linear-gradient(135deg, #e91e63 0%, #ad1457 100%); color: #fff; text-align: center; padding: 60px 20px 50px; }
+.page-hero h1 { font-size: 36px; margin-bottom: 12px; }
+.page-hero p { opacity: .9; font-size: 17px; max-width: 620px; margin: 0 auto; line-height: 1.7; }
+.container { max-width: 1000px; margin: 0 auto; padding: 40px 20px; }
+.btn { display: inline-block; padding: 14px 36px; background: #e91e63; color: #fff; border-radius: 8px; text-decoration: none; font-weight: 700; font-size: 16px; transition: background .2s; }
+.btn:hover { background: #c2185b; }
+
+h2 { font-size: 24px; text-align: center; margin-bottom: 32px; }
+
+/* Audience stats */
+.audience { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 50px; }
+.aud-card { background: #fff; border-radius: 12px; padding: 24px; text-align: center; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+.aud-card .num { font-size: 28px; font-weight: 800; color: #e91e63; }
+.aud-card .lbl { font-size: 13px; color: #888; margin-top: 4px; }
+
+/* Ad formats */
+.formats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; margin-bottom: 50px; }
+.format-card { background: #fff; border-radius: 12px; padding: 32px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+.format-card h3 { font-size: 18px; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+.format-card h3 .icon { font-size: 24px; }
+.format-card p { font-size: 14px; color: #777; line-height: 1.6; margin-bottom: 12px; }
+.format-card .placement { display: inline-block; padding: 3px 10px; background: #fce4ec; color: #c62828; border-radius: 20px; font-size: 11px; font-weight: 600; margin-right: 6px; }
+.format-card .price-tag { margin-top: 12px; font-size: 20px; font-weight: 800; color: #e91e63; }
+.format-card .price-tag span { font-size: 12px; color: #999; font-weight: 400; }
+.format-preview { height: 100px; background: #f8f0f3; border-radius: 8px; margin-top: 16px; display: flex; align-items: center; justify-content: center; color: #e91e63; font-size: 13px; border: 2px dashed #f0c0d0; }
+
+/* Targeting */
+.targeting { background: #fff; border-radius: 12px; padding: 36px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); margin-bottom: 50px; }
+.targeting h2 { text-align: left; margin-bottom: 20px; }
+.target-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+.target-item { padding: 16px; background: #fef0f4; border-radius: 8px; }
+.target-item h4 { font-size: 14px; margin-bottom: 6px; color: #333; }
+.target-item p { font-size: 13px; color: #777; line-height: 1.5; }
+
+/* CTA */
+.ad-cta { text-align: center; background: #fff; border-radius: 12px; padding: 48px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); margin-bottom: 50px; }
+.ad-cta h2 { margin-bottom: 12px; }
+.ad-cta p { color: #777; font-size: 15px; margin-bottom: 24px; }
+
+footer { background: #1a2332; color: #aab; padding: 40px 20px; text-align: center; }
+footer .links a { color: #8899aa; text-decoration: none; margin: 0 12px; font-size: 14px; }
+footer .copy { font-size: 13px; color: #556; margin-top: 16px; }
+@media (max-width: 768px) { nav { display: none; } .audience, .formats, .target-grid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <a href="index.html" class="logo">Startup<span>Finder</span></a>
+        <nav>
+      <a href="about.html">소개</a>
+      <a href="how-it-works.html">작동 원리</a>
+      <a href="index.html#ranking">랭킹</a>
+      <a href="countries.html">국가별</a>
+      <a href="index.html#directories">디렉토리</a>
+      <a href="faster-approval.html">빠른 승인</a>
+      <a href="booster.html">부스터</a>
+      <a href="premium-profile.html">프리미엄</a>
+      <a href="advertising.html">광고</a>
+      <a href="blog.html">블로그</a>
+      <a href="create.html">스타트업 등록</a>
+    </nav>
+  </div>
+</header>
+
+<div class="page-hero">
+  <h1>SF 광고</h1>
+  <p>전 세계 스타트업 창업자, 투자자, 기술 전문가에게 직접 도달하세요. 타겟팅된 광고로 최대 효과를 얻으세요.</p>
+</div>
+
+<div class="container">
+
+  <h2>오디언스</h2>
+  <div class="audience">
+    <div class="aud-card"><div class="num">500K+</div><div class="lbl">월 방문자</div></div>
+    <div class="aud-card"><div class="num">195</div><div class="lbl">국가</div></div>
+    <div class="aud-card"><div class="num">68%</div><div class="lbl">창업자 / CEO</div></div>
+    <div class="aud-card"><div class="num">3.2분</div><div class="lbl">평균 체류시간</div></div>
+  </div>
+
+  <h2>광고 포맷</h2>
+  <div class="formats">
+    <div class="format-card">
+      <h3><span class="icon">📌</span> 추천 스타트업 카드</h3>
+      <p>메인 페이지 상단 캐러셀에 스타트업이 추천 카드로 노출됩니다. 최대 가시성을 제공합니다.</p>
+      <span class="placement">메인 페이지</span><span class="placement">캐러셀</span>
+      <div class="format-preview">추천 스타트업 카드 미리보기 영역</div>
+      <div class="price-tag">$299 <span>/ 주</span></div>
+    </div>
+    <div class="format-card">
+      <h3><span class="icon">📊</span> 랭킹 사이드 배너</h3>
+      <p>랭킹 페이지, 국가별 페이지 사이드바에 배너 광고가 노출됩니다.</p>
+      <span class="placement">랭킹 페이지</span><span class="placement">국가별</span>
+      <div class="format-preview">사이드 배너 미리보기 영역</div>
+      <div class="price-tag">$199 <span>/ 주</span></div>
+    </div>
+    <div class="format-card">
+      <h3><span class="icon">📧</span> 뉴스레터 스폰서</h3>
+      <p>주간 뉴스레터에 스폰서 콘텐츠로 포함됩니다. 150K+ 구독자에게 직접 도달합니다.</p>
+      <span class="placement">이메일</span><span class="placement">뉴스레터</span>
+      <div class="format-preview">뉴스레터 스폰서 영역 미리보기</div>
+      <div class="price-tag">$499 <span>/ 1회</span></div>
+    </div>
+    <div class="format-card">
+      <h3><span class="icon">🔍</span> 검색 상위 노출</h3>
+      <p>특정 카테고리나 키워드 검색 시 스타트업이 상위에 하이라이트로 표시됩니다.</p>
+      <span class="placement">검색 결과</span><span class="placement">카테고리</span>
+      <div class="format-preview">검색 상위 노출 미리보기 영역</div>
+      <div class="price-tag">$149 <span>/ 주</span></div>
+    </div>
+  </div>
+
+  <div class="targeting">
+    <h2>타겟팅 옵션</h2>
+    <div class="target-grid">
+      <div class="target-item">
+        <h4>🌍 국가 / 지역</h4>
+        <p>특정 국가 또는 대륙의 방문자에게만 광고를 노출합니다.</p>
+      </div>
+      <div class="target-item">
+        <h4>🏷️ 카테고리</h4>
+        <p>AI, SaaS, 핀테크 등 특정 카테고리에 관심 있는 사용자를 타겟팅합니다.</p>
+      </div>
+      <div class="target-item">
+        <h4>👤 직군</h4>
+        <p>창업자, 개발자, 투자자, 마케터 등 직군별 타겟팅이 가능합니다.</p>
+      </div>
+      <div class="target-item">
+        <h4>📱 디바이스</h4>
+        <p>데스크톱, 모바일, 태블릿 등 디바이스별 노출을 설정합니다.</p>
+      </div>
+      <div class="target-item">
+        <h4>⏰ 시간대</h4>
+        <p>특정 시간대에만 광고를 집중적으로 노출할 수 있습니다.</p>
+      </div>
+      <div class="target-item">
+        <h4>🔄 리타겟팅</h4>
+        <p>이전에 프로필을 방문한 사용자에게 다시 광고를 노출합니다.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="ad-cta">
+    <h2>광고를 시작하세요</h2>
+    <p>맞춤형 광고 패키지에 대해 상담을 받아보세요.</p>
+    <a href="#" class="btn">광고 문의하기</a>
+  </div>
+
+</div>
+
+<footer>
+  <div class="links"><a href="index.html">홈</a><a href="#">이용약관</a><a href="#">개인정보처리방침</a></div>
+  <p class="copy">&copy; 2026 StartupFinder. All rights reserved.</p>
+  <div style="margin-top:20px;"><a href="admin.html" style="display:inline-block; padding:8px 20px; background:#e53935; color:#fff; font-size:13px; font-weight:600; text-decoration:none; border-radius:6px; transition:background .2s;" onmouseover="this.style.background='#c62828'" onmouseout="this.style.background='#e53935'">🔒 관리자 대시보드</a></div>
+</footer>
+
+</body>
+</html>
+

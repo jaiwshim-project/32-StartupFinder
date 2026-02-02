@@ -1,0 +1,184 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>국가별 스타트업 - StartupFinder</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif; color: #333; background: #f5f7fa; }
+header { background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.08); position: sticky; top: 0; z-index: 100; }
+.header-inner { max-width: 1200px; margin: 0 auto; padding: 0 20px; display: flex; align-items: center; justify-content: space-between; height: 64px; }
+.logo { font-size: 22px; font-weight: 700; color: #499cd7; text-decoration: none; }
+.logo span { color: #333; }
+nav a { text-decoration: none; color: #555; margin-left: 28px; font-size: 15px; font-weight: 500; transition: color .2s; }
+nav a:hover, nav a.active { color: #499cd7; }
+.page-hero { background: linear-gradient(135deg, #499cd7 0%, #2c6faa 100%); color: #fff; text-align: center; padding: 50px 20px 40px; }
+.page-hero h1 { font-size: 32px; margin-bottom: 10px; }
+.page-hero p { opacity: .9; font-size: 16px; }
+.container { max-width: 1200px; margin: 40px auto; padding: 0 20px; }
+
+/* Top countries */
+.top-countries { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; margin-bottom: 40px; }
+.top-country { background: #fff; border-radius: 12px; padding: 24px 16px; text-align: center; box-shadow: 0 2px 12px rgba(0,0,0,0.06); transition: transform .2s; cursor: pointer; }
+.top-country:hover { transform: translateY(-3px); }
+.top-country .flag { font-size: 40px; margin-bottom: 8px; }
+.top-country .name { font-weight: 700; font-size: 15px; color: #333; }
+.top-country .count { font-size: 13px; color: #499cd7; font-weight: 600; margin-top: 4px; }
+.top-country .rank-badge { display: inline-block; margin-top: 6px; padding: 2px 10px; background: #fff8e1; color: #f57f17; border-radius: 20px; font-size: 11px; font-weight: 600; }
+
+/* Search */
+.search-bar { display: flex; gap: 12px; margin-bottom: 30px; }
+.search-bar input { flex: 1; padding: 12px 16px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 15px; outline: none; }
+.search-bar input:focus { border-color: #499cd7; }
+.search-bar select { padding: 12px 16px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 14px; outline: none; background: #fff; }
+
+/* Country table */
+.table-wrap { overflow-x: auto; background: #fff; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+table { width: 100%; border-collapse: collapse; }
+thead { background: #499cd7; color: #fff; }
+th { padding: 12px 16px; text-align: left; font-size: 13px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+th:hover { background: #3a85bb; }
+td { padding: 14px 16px; border-bottom: 1px solid #f0f0f0; font-size: 14px; }
+tr:hover { background: #f8fbff; }
+.country-row { display: flex; align-items: center; gap: 10px; }
+.country-flag { font-size: 22px; }
+.country-name { font-weight: 600; color: #333; }
+.bar-wrap { width: 120px; height: 8px; background: #e0e0e0; border-radius: 4px; }
+.bar-fill { height: 100%; border-radius: 4px; background: linear-gradient(90deg, #499cd7, #2c6faa); }
+.continent-tag { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; }
+.continent-na { background: #e3f2fd; color: #1565c0; }
+.continent-eu { background: #f3e5f5; color: #7b1fa2; }
+.continent-as { background: #fce4ec; color: #c62828; }
+.continent-oc { background: #e8f5e9; color: #2e7d32; }
+.continent-sa { background: #fff8e1; color: #f57f17; }
+.continent-af { background: #fff3e0; color: #e65100; }
+
+footer { background: #1a2332; color: #aab; padding: 40px 20px; text-align: center; margin-top: 50px; }
+footer .links a { color: #8899aa; text-decoration: none; margin: 0 12px; font-size: 14px; }
+footer .copy { font-size: 13px; color: #556; margin-top: 16px; }
+@media (max-width: 768px) { nav { display: none; } .top-countries { grid-template-columns: repeat(2, 1fr); } }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <a href="index.html" class="logo">Startup<span>Finder</span></a>
+        <nav>
+      <a href="about.html">소개</a>
+      <a href="how-it-works.html">작동 원리</a>
+      <a href="index.html#ranking">랭킹</a>
+      <a href="countries.html">국가별</a>
+      <a href="index.html#directories">디렉토리</a>
+      <a href="faster-approval.html">빠른 승인</a>
+      <a href="booster.html">부스터</a>
+      <a href="premium-profile.html">프리미엄</a>
+      <a href="advertising.html">광고</a>
+      <a href="blog.html">블로그</a>
+      <a href="create.html">스타트업 등록</a>
+    </nav>
+  </div>
+</header>
+
+<div class="page-hero">
+  <h1>국가별 스타트업</h1>
+  <p>195개국의 스타트업 생태계를 탐색하세요.</p>
+</div>
+
+<div class="container">
+
+  <h2 style="font-size:20px; margin-bottom:16px;">TOP 5 국가</h2>
+  <div class="top-countries">
+    <div class="top-country">
+      <div class="flag">🇺🇸</div>
+      <div class="name">미국</div>
+      <div class="count">42,180개 스타트업</div>
+      <div class="rank-badge">#1 글로벌</div>
+    </div>
+    <div class="top-country">
+      <div class="flag">🇬🇧</div>
+      <div class="name">영국</div>
+      <div class="count">12,340개 스타트업</div>
+      <div class="rank-badge">#2 글로벌</div>
+    </div>
+    <div class="top-country">
+      <div class="flag">🇮🇳</div>
+      <div class="name">인도</div>
+      <div class="count">11,890개 스타트업</div>
+      <div class="rank-badge">#3 글로벌</div>
+    </div>
+    <div class="top-country">
+      <div class="flag">🇩🇪</div>
+      <div class="name">독일</div>
+      <div class="count">7,450개 스타트업</div>
+      <div class="rank-badge">#4 글로벌</div>
+    </div>
+    <div class="top-country">
+      <div class="flag">🇫🇷</div>
+      <div class="name">프랑스</div>
+      <div class="count">5,920개 스타트업</div>
+      <div class="rank-badge">#5 글로벌</div>
+    </div>
+  </div>
+
+  <h2 style="font-size:20px; margin-bottom:16px;">전체 국가 목록</h2>
+
+  <div class="search-bar">
+    <input type="text" placeholder="국가 검색...">
+    <select>
+      <option>전체 대륙</option>
+      <option>북미</option>
+      <option>유럽</option>
+      <option>아시아</option>
+      <option>오세아니아</option>
+      <option>남미</option>
+      <option>아프리카</option>
+    </select>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>#</th><th>국가</th><th>스타트업 수</th><th>비율</th><th>대륙</th><th>최고 SF Score</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>1</td><td><div class="country-row"><span class="country-flag">🇺🇸</span><span class="country-name">미국</span></div></td><td><strong>42,180</strong></td><td><div class="bar-wrap"><div class="bar-fill" style="width:100%"></div></div></td><td><span class="continent-tag continent-na">북미</span></td><td>88,599</td></tr>
+        <tr><td>2</td><td><div class="country-row"><span class="country-flag">🇬🇧</span><span class="country-name">영국</span></div></td><td><strong>12,340</strong></td><td><div class="bar-wrap"><div class="bar-fill" style="width:29%"></div></div></td><td><span class="continent-tag continent-eu">유럽</span></td><td>86,372</td></tr>
+        <tr><td>3</td><td><div class="country-row"><span class="country-flag">🇮🇳</span><span class="country-name">인도</span></div></td><td><strong>11,890</strong></td><td><div class="bar-wrap"><div class="bar-fill" style="width:28%"></div></div></td><td><span class="continent-tag continent-as">아시아</span></td><td>82,100</td></tr>
+        <tr><td>4</td><td><div class="country-row"><span class="country-flag">🇩🇪</span><span class="country-name">독일</span></div></td><td><strong>7,450</strong></td><td><div class="bar-wrap"><div class="bar-fill" style="width:18%"></div></div></td><td><span class="continent-tag continent-eu">유럽</span></td><td>81,540</td></tr>
+        <tr><td>5</td><td><div class="country-row"><span class="country-flag">🇫🇷</span><span class="country-name">프랑스</span></div></td><td><strong>5,920</strong></td><td><div class="bar-wrap"><div class="bar-fill" style="width:14%"></div></div></td><td><span class="continent-tag continent-eu">유럽</span></td><td>80,890</td></tr>
+        <tr><td>6</td><td><div class="country-row"><span class="country-flag">🇨🇦</span><span class="country-name">캐나다</span></div></td><td><strong>5,670</strong></td><td><div class="bar-wrap"><div class="bar-fill" style="width:13%"></div></div></td><td><span class="continent-tag continent-na">북미</span></td><td>80,210</td></tr>
+        <tr><td>7</td><td><div class="country-row"><span class="country-flag">🇧🇷</span><span class="country-name">브라질</span></div></td><td><strong>4,890</strong></td><td><div class="bar-wrap"><div class="bar-fill" style="width:12%"></div></div></td><td><span class="continent-tag continent-sa">남미</span></td><td>79,450</td></tr>
+        <tr><td>8</td><td><div class="country-row"><span class="country-flag">🇦🇺</span><span class="country-name">호주</span></div></td><td><strong>4,320</strong></td><td><div class="bar-wrap"><div class="bar-fill" style="width:10%"></div></div></td><td><span class="continent-tag continent-oc">오세아니아</span></td><td>85,502</td></tr>
+        <tr><td>9</td><td><div class="country-row"><span class="country-flag">🇪🇸</span><span class="country-name">스페인</span></div></td><td><strong>3,780</strong></td><td><div class="bar-wrap"><div class="bar-fill" style="width:9%"></div></div></td><td><span class="continent-tag continent-eu">유럽</span></td><td>78,900</td></tr>
+        <tr><td>10</td><td><div class="country-row"><span class="country-flag">🇯🇵</span><span class="country-name">일본</span></div></td><td><strong>3,540</strong></td><td><div class="bar-wrap"><div class="bar-fill" style="width:8%"></div></div></td><td><span class="continent-tag continent-as">아시아</span></td><td>78,340</td></tr>
+        <tr><td>11</td><td><div class="country-row"><span class="country-flag">🇰🇷</span><span class="country-name">대한민국</span></div></td><td><strong>3,210</strong></td><td><div class="bar-wrap"><div class="bar-fill" style="width:8%"></div></div></td><td><span class="continent-tag continent-as">아시아</span></td><td>77,890</td></tr>
+        <tr><td>12</td><td><div class="country-row"><span class="country-flag">🇳🇱</span><span class="country-name">네덜란드</span></div></td><td><strong>3,050</strong></td><td><div class="bar-wrap"><div class="bar-fill" style="width:7%"></div></div></td><td><span class="continent-tag continent-eu">유럽</span></td><td>77,200</td></tr>
+        <tr><td>13</td><td><div class="country-row"><span class="country-flag">🇮🇱</span><span class="country-name">이스라엘</span></div></td><td><strong>2,890</strong></td><td><div class="bar-wrap"><div class="bar-fill" style="width:7%"></div></div></td><td><span class="continent-tag continent-as">아시아</span></td><td>81,200</td></tr>
+        <tr><td>14</td><td><div class="country-row"><span class="country-flag">🇸🇬</span><span class="country-name">싱가포르</span></div></td><td><strong>2,670</strong></td><td><div class="bar-wrap"><div class="bar-fill" style="width:6%"></div></div></td><td><span class="continent-tag continent-as">아시아</span></td><td>76,800</td></tr>
+        <tr><td>15</td><td><div class="country-row"><span class="country-flag">🇸🇪</span><span class="country-name">스웨덴</span></div></td><td><strong>2,410</strong></td><td><div class="bar-wrap"><div class="bar-fill" style="width:6%"></div></div></td><td><span class="continent-tag continent-eu">유럽</span></td><td>79,100</td></tr>
+        <tr><td>16</td><td><div class="country-row"><span class="country-flag">🇳🇬</span><span class="country-name">나이지리아</span></div></td><td><strong>2,180</strong></td><td><div class="bar-wrap"><div class="bar-fill" style="width:5%"></div></div></td><td><span class="continent-tag continent-af">아프리카</span></td><td>72,400</td></tr>
+        <tr><td>17</td><td><div class="country-row"><span class="country-flag">🇨🇭</span><span class="country-name">스위스</span></div></td><td><strong>1,980</strong></td><td><div class="bar-wrap"><div class="bar-fill" style="width:5%"></div></div></td><td><span class="continent-tag continent-eu">유럽</span></td><td>78,500</td></tr>
+        <tr><td>18</td><td><div class="country-row"><span class="country-flag">🇮🇩</span><span class="country-name">인도네시아</span></div></td><td><strong>1,870</strong></td><td><div class="bar-wrap"><div class="bar-fill" style="width:4%"></div></div></td><td><span class="continent-tag continent-as">아시아</span></td><td>74,200</td></tr>
+        <tr><td>19</td><td><div class="country-row"><span class="country-flag">🇵🇱</span><span class="country-name">폴란드</span></div></td><td><strong>1,650</strong></td><td><div class="bar-wrap"><div class="bar-fill" style="width:4%"></div></div></td><td><span class="continent-tag continent-eu">유럽</span></td><td>75,300</td></tr>
+        <tr><td>20</td><td><div class="country-row"><span class="country-flag">🇲🇽</span><span class="country-name">멕시코</span></div></td><td><strong>1,520</strong></td><td><div class="bar-wrap"><div class="bar-fill" style="width:4%"></div></div></td><td><span class="continent-tag continent-na">북미</span></td><td>73,800</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<footer>
+  <div class="links">
+    <a href="index.html">홈</a>
+    <a href="#">이용약관</a>
+    <a href="#">개인정보처리방침</a>
+    <a href="#">FAQ</a>
+  </div>
+  <p class="copy">&copy; 2026 StartupFinder. All rights reserved.</p>
+  <div style="margin-top:20px;"><a href="admin.html" style="display:inline-block; padding:8px 20px; background:#e53935; color:#fff; font-size:13px; font-weight:600; text-decoration:none; border-radius:6px; transition:background .2s;" onmouseover="this.style.background='#c62828'" onmouseout="this.style.background='#e53935'">🔒 관리자 대시보드</a></div>
+</footer>
+
+</body>
+</html>
+

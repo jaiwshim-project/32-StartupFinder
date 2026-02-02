@@ -1,0 +1,170 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>프리미엄 프로필 - StartupFinder</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif; color: #333; background: #f5f7fa; }
+header { background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.08); position: sticky; top: 0; z-index: 100; }
+.header-inner { max-width: 1200px; margin: 0 auto; padding: 0 20px; display: flex; align-items: center; justify-content: space-between; height: 64px; }
+.logo { font-size: 22px; font-weight: 700; color: #499cd7; text-decoration: none; }
+.logo span { color: #333; }
+nav a { text-decoration: none; color: #555; margin-left: 28px; font-size: 15px; font-weight: 500; transition: color .2s; }
+nav a:hover { color: #499cd7; }
+.page-hero { background: linear-gradient(135deg, #ffd700 0%, #ff8f00 100%); color: #333; text-align: center; padding: 60px 20px 50px; }
+.page-hero h1 { font-size: 36px; margin-bottom: 12px; }
+.page-hero p { font-size: 17px; max-width: 600px; margin: 0 auto; line-height: 1.7; opacity: .85; }
+.container { max-width: 1000px; margin: 0 auto; padding: 40px 20px; }
+.btn { display: inline-block; padding: 14px 36px; background: #ff8f00; color: #fff; border-radius: 8px; text-decoration: none; font-weight: 700; font-size: 16px; transition: background .2s; }
+.btn:hover { background: #e67e00; }
+
+/* Comparison */
+.comparison { margin-bottom: 50px; }
+.comparison h2 { font-size: 24px; text-align: center; margin-bottom: 32px; }
+.comp-table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+.comp-table th { padding: 16px; background: #f8f8f8; font-size: 14px; text-align: center; }
+.comp-table th:first-child { text-align: left; }
+.comp-table td { padding: 14px 16px; border-bottom: 1px solid #f0f0f0; font-size: 14px; text-align: center; }
+.comp-table td:first-child { text-align: left; font-weight: 600; }
+.comp-table .check { color: #4caf50; font-size: 18px; }
+.comp-table .cross { color: #ccc; font-size: 18px; }
+.comp-table .premium-col { background: #fffbf0; }
+
+/* Preview */
+.preview { margin-bottom: 50px; }
+.preview h2 { font-size: 24px; text-align: center; margin-bottom: 32px; }
+.profile-preview { background: #fff; border-radius: 16px; padding: 40px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); border: 2px solid #ffd700; max-width: 700px; margin: 0 auto; }
+.profile-header { display: flex; gap: 20px; align-items: center; margin-bottom: 24px; padding-bottom: 24px; border-bottom: 1px solid #f0f0f0; }
+.profile-logo { width: 72px; height: 72px; border-radius: 16px; background: linear-gradient(135deg, #6c63ff, #3f3d9e); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 28px; font-weight: 700; }
+.profile-info h3 { font-size: 20px; display: flex; align-items: center; gap: 8px; }
+.verified-badge { display: inline-block; padding: 2px 8px; background: #ffd700; color: #333; border-radius: 4px; font-size: 10px; font-weight: 700; }
+.profile-info p { color: #777; font-size: 14px; margin-top: 4px; }
+.profile-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
+.profile-stat { text-align: center; padding: 12px; background: #f8f9ff; border-radius: 8px; }
+.profile-stat .val { font-size: 20px; font-weight: 800; color: #333; }
+.profile-stat .lbl { font-size: 11px; color: #999; }
+.profile-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 16px; }
+.profile-tag { padding: 4px 12px; background: #f0f4ff; color: #499cd7; border-radius: 20px; font-size: 12px; }
+.profile-desc { font-size: 14px; color: #666; line-height: 1.7; }
+.profile-gallery { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 20px; }
+.profile-gallery div { height: 80px; background: #e8eef4; border-radius: 8px; }
+
+.price-box { text-align: center; background: #fff; border-radius: 12px; padding: 40px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); max-width: 500px; margin: 0 auto 50px; }
+.price-box h3 { font-size: 20px; color: #ff8f00; margin-bottom: 8px; }
+.price-box .amount { font-size: 48px; font-weight: 800; color: #333; }
+.price-box .amount span { font-size: 16px; color: #999; font-weight: 400; }
+.price-box .features { list-style: none; text-align: left; margin: 20px 0 28px; }
+.price-box .features li { padding: 8px 0; font-size: 14px; color: #555; border-bottom: 1px solid #f5f5f5; }
+.price-box .features li::before { content: '✓ '; color: #ff8f00; font-weight: 700; }
+
+footer { background: #1a2332; color: #aab; padding: 40px 20px; text-align: center; }
+footer .links a { color: #8899aa; text-decoration: none; margin: 0 12px; font-size: 14px; }
+footer .copy { font-size: 13px; color: #556; margin-top: 16px; }
+@media (max-width: 768px) { nav { display: none; } .profile-stats { grid-template-columns: repeat(2, 1fr); } .profile-header { flex-direction: column; text-align: center; } }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <a href="index.html" class="logo">Startup<span>Finder</span></a>
+        <nav>
+      <a href="about.html">소개</a>
+      <a href="how-it-works.html">작동 원리</a>
+      <a href="index.html#ranking">랭킹</a>
+      <a href="countries.html">국가별</a>
+      <a href="index.html#directories">디렉토리</a>
+      <a href="faster-approval.html">빠른 승인</a>
+      <a href="booster.html">부스터</a>
+      <a href="premium-profile.html">프리미엄</a>
+      <a href="advertising.html">광고</a>
+      <a href="blog.html">블로그</a>
+      <a href="create.html">스타트업 등록</a>
+    </nav>
+  </div>
+</header>
+
+<div class="page-hero">
+  <h1>SF 프리미엄 프로필</h1>
+  <p>검증 배지, 스크린샷 갤러리, 상세 통계 등 프리미엄 기능으로 스타트업 프로필을 업그레이드하세요.</p>
+</div>
+
+<div class="container">
+
+  <div class="preview">
+    <h2>프리미엄 프로필 미리보기</h2>
+    <div class="profile-preview">
+      <div class="profile-header">
+        <div class="profile-logo">S</div>
+        <div class="profile-info">
+          <h3>SampleStartup <span class="verified-badge">VERIFIED</span></h3>
+          <p>AI 기반 프로젝트 관리 도구</p>
+        </div>
+      </div>
+      <div class="profile-stats">
+        <div class="profile-stat"><div class="val">82,450</div><div class="lbl">SF Score</div></div>
+        <div class="profile-stat"><div class="val">#142</div><div class="lbl">글로벌 순위</div></div>
+        <div class="profile-stat"><div class="val">#12</div><div class="lbl">국가 순위</div></div>
+        <div class="profile-stat"><div class="val">94</div><div class="lbl">SF Web</div></div>
+      </div>
+      <div class="profile-tags">
+        <span class="profile-tag">AI</span>
+        <span class="profile-tag">SaaS</span>
+        <span class="profile-tag">프로젝트 관리</span>
+        <span class="profile-tag">B2B</span>
+      </div>
+      <p class="profile-desc">SampleStartup은 AI를 활용하여 팀의 프로젝트 관리를 혁신하는 SaaS 플랫폼입니다. 자동 일정 조율, 리스크 예측, 팀 성과 분석 등 스마트한 기능을 제공합니다.</p>
+      <div class="profile-gallery">
+        <div></div><div></div><div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="comparison">
+    <h2>일반 vs 프리미엄 비교</h2>
+    <table class="comp-table">
+      <thead>
+        <tr><th>기능</th><th>일반 프로필</th><th class="premium-col">프리미엄 프로필</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>기본 정보 표시</td><td class="check">&#10003;</td><td class="premium-col check">&#10003;</td></tr>
+        <tr><td>SF Score 표시</td><td class="check">&#10003;</td><td class="premium-col check">&#10003;</td></tr>
+        <tr><td>검증 배지 (Verified)</td><td class="cross">&#10007;</td><td class="premium-col check">&#10003;</td></tr>
+        <tr><td>스크린샷 갤러리</td><td class="cross">&#10007;</td><td class="premium-col check">&#10003;</td></tr>
+        <tr><td>상세 통계 대시보드</td><td class="cross">&#10007;</td><td class="premium-col check">&#10003;</td></tr>
+        <tr><td>소셜 미디어 링크</td><td>최대 2개</td><td class="premium-col">무제한</td></tr>
+        <tr><td>커스텀 설명 길이</td><td>200자</td><td class="premium-col">무제한</td></tr>
+        <tr><td>경쟁사 비교</td><td class="cross">&#10007;</td><td class="premium-col check">&#10003;</td></tr>
+        <tr><td>검색 우선 노출</td><td class="cross">&#10007;</td><td class="premium-col check">&#10003;</td></tr>
+        <tr><td>프로필 분석 리포트</td><td class="cross">&#10007;</td><td class="premium-col check">&#10003;</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="price-box">
+    <h3>프리미엄 프로필</h3>
+    <div class="amount">$19 <span>/ 월</span></div>
+    <ul class="features">
+      <li>검증 배지 표시</li>
+      <li>스크린샷 갤러리 (최대 10장)</li>
+      <li>상세 통계 대시보드</li>
+      <li>검색 우선 노출</li>
+      <li>경쟁사 비교 분석</li>
+      <li>월별 프로필 분석 리포트</li>
+    </ul>
+    <a href="#" class="btn">프리미엄 시작하기</a>
+  </div>
+
+</div>
+
+<footer>
+  <div class="links"><a href="index.html">홈</a><a href="#">이용약관</a><a href="#">개인정보처리방침</a></div>
+  <p class="copy">&copy; 2026 StartupFinder. All rights reserved.</p>
+  <div style="margin-top:20px;"><a href="admin.html" style="display:inline-block; padding:8px 20px; background:#e53935; color:#fff; font-size:13px; font-weight:600; text-decoration:none; border-radius:6px; transition:background .2s;" onmouseover="this.style.background='#c62828'" onmouseout="this.style.background='#e53935'">🔒 관리자 대시보드</a></div>
+</footer>
+
+</body>
+</html>
+
